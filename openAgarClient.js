@@ -1,3 +1,4 @@
+"use strict"
 /*
     OpenAgar Client
     Copyright (C) 2017 Andrew S
@@ -20,3 +21,54 @@
 
 
 
+(function(web) {
+    // Variables
+    
+    var nodes = new HashBounds(),
+        nodeCache = [],
+        skinCache = [],
+        customSkins = [],
+        config = {
+            
+            
+        };
+    
+    
+    // Classes
+        
+    class Node {
+     constructor(x,y,velocity,accel,size,mass) {
+         this.x = x;
+         this.y = y;
+         this.oldX = x;
+         this.maxX = x;
+         this.oldY = y;
+         this.maxY = y;
+         this.oldSize = size;
+         this.size = size;
+         this.newSize = size;
+         this.mass = mass;
+         this.velocity = velocity;
+         this.acceleration = accel;
+        }
+        setPos(x,y) {
+         this.x = x;
+         this.y = y;
+         this.oldX = x;
+         this.maxX = x;
+         this.oldY = y;
+         this.maxY = y;
+        }
+        setSize(size) {
+            this.oldSize = size;
+            this.size = size;
+            this.newSize = size;
+        }
+        
+        
+    }
+    
+    
+    
+    
+})($)

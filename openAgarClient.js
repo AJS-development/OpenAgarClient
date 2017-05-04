@@ -33,6 +33,10 @@
             
         };
     
+    // System Variables
+    
+    var time = Date.now(),
+        frameID = 0;
     
     // Classes
         
@@ -69,6 +73,14 @@
     }
     
     
+    function gameLoop() {
+        time = Date.now();
+        frameID = (frameID < 0xFFFFFFFF) ? frameID ++ : frameID = 0;
+        
+        
+        window.requestAnimationFrame(gameLoop);       
+    }
+    gameLoop();
     
     
 })($)

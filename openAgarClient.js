@@ -54,6 +54,7 @@
          this.mass = mass;
          this.velocity = velocity;
          this.acceleration = accel;
+         this.posTime = time;
         }
         setPos(x,y) {
          this.x = x;
@@ -62,11 +63,28 @@
          this.maxX = x;
          this.oldY = y;
          this.maxY = y;
+            this.posTime = time;
+        }
+        setMove(x,y,velocity,mx,my) {
+         this.x = x;
+         this.y = y;
+            this.velocity = velocity;
+         this.oldX = x;
+         this.maxX = mx;
+         this.oldY = y;
+         this.maxY = my;
+            this.posTime = time;
         }
         setSize(size) {
             this.oldSize = size;
             this.size = size;
             this.newSize = size;
+        }
+        updatePos() {
+           var step = (time - this.posTime) * this.velocity;
+            this.x = this.oldX + step;
+            this.y = this.oldY + step;
+            
         }
         
         
@@ -77,6 +95,7 @@
         time = Date.now();
         frameID = (frameID < 0xFFFFFFFF) ? frameID ++ : frameID = 0;
         
+        // Draw stuff
         
         window.requestAnimationFrame(gameLoop);       
     }

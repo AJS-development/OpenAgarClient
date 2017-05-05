@@ -1,2 +1,9 @@
 # OpenAgarClient
-Ive decided to take the client development into my own hands
+
+Todo
+- [ ] Leaderboard
+- [ ] Names/mass
+- [ ] Socket
+- [ ] Chat
+- [ ] Spectating
+- [ ] Animations

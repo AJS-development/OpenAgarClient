@@ -161,7 +161,7 @@
         renderer.view.style.display = "block";
 
         // Resize to fit screen
-        renderer.resize(window.innerWidth, window.innerHeight);
+        renderer.resize(win.x, win.y);
     }
 
     function gameLoop() {

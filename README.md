@@ -1,2 +1,2 @@
 # OpenAgarClient
-Ive decided to take the client development into my own hands
+We are gonna make the best client ever

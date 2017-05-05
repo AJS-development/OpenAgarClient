@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 /*
     OpenAgar Client
     Copyright (C) 2017 Andrew S
@@ -25,6 +25,7 @@
     // Variables
 
     var nodes = new HashBounds(),
+        allNodes = [],
         nodeCache = [],
         playerCells = [],
         players = [],
@@ -43,12 +44,13 @@
     // Visual Variables
 
     var renderer,
-        stage;
+        stage,
+        viewZoom = 0;
 
     // Classes
 
     class Node {
-        constructor(id, x, y, size, mass) {
+        constructor(id, x, y, size, mass, color) {
             this.id = id;
             this.x = x;
             this.y = y;
@@ -56,6 +58,7 @@
             this.maxX = x;
             this.oldY = y;
             this.maxY = y;
+            this.color = 0xFFF
             this.angle = 0;
             this.oldSize = size;
             this.size = size;
@@ -129,8 +132,9 @@
 
 
     }
-
-    // Main Graphics Setup/loop
+    allNodes.push(new Node(1, 100, 100, 200, 100))
+        // Main Graphics Setup/loop
+    playerCells.push(allNodes[0])
 
     function setUp() {
 
@@ -159,9 +163,17 @@
         time = Date.now();
         frameID = (frameID < 0xFFFFFFFF) ? frameID++ : frameID = 0;
 
-        // Draw stuff
+        allNodes.forEach((node) => {
+            node.updatePos();
+            if (node.node) updateNode(node);
+            else drawNode(node);
+        })
+
+        camera()
+            // Draw stuff
         renderer.render(stage);
         window.requestAnimationFrame(gameLoop);
+
     }
     setUp()
     gameLoop();
@@ -184,13 +196,14 @@
         viewZoom = (9 * viewZoom + newViewZoom) / 10;
         stage.scale.set(viewZoom, viewZoom);
 
-        stage.position.x = Math.floor((stage.position.x + tX) / 2)
-        stage.position.y = Math.floor((stage.position.y + tY) / 2)
+        stage.position.x = -Math.floor((stage.position.x + tX) / 2)
+        stage.position.y = -Math.floor((stage.position.y + tY) / 2)
+        console.log(viewZoom, stage.position)
     }
 
     function viewRange() {
         var ratio;
-        ratio = Math.max(render.height / 1080, render.width / 1920);
+        ratio = Math.max(renderer.height / 1080, renderer.width / 1920);
         return ratio;
     }
 

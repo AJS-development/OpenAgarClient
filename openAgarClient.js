@@ -26,6 +26,7 @@
 
     var nodes = new HashBounds(),
         allNodes = [],
+        virusNodes = [],
         nodeCache = [],
         playerCells = [],
         players = [],
@@ -164,12 +165,20 @@
         time = Date.now();
         frameID = (frameID < 0xFFFFFFFF) ? frameID++ : frameID = 0;
 
+        allNodes.sort(function (a, b) { // sort by size for overlap rules
+            return a.size - b.size;
+        })
+
         allNodes.forEach((node) => {
             node.updatePos();
             if (node.node) updateNode(node);
             else drawNode(node);
         })
-
+        virusNodes.forEach((node) => { // viruses have overlap priority
+            node.updatePos();
+            if (node.node) updateNode(node);
+            else drawNode(node);
+        })
         camera()
             // Draw stuff
         renderer.render(stage);

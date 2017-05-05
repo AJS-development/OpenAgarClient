@@ -17,8 +17,12 @@
         skinCache = [],
         customSkins = [],
         config = {
-
-
+        },
+        renderOptions = {
+            autoResize: true,
+            resolution: 1,
+            clearBeforeRender: true,
+            roundPixels: true
         };
 
     // System Variables
@@ -122,12 +126,26 @@
         // Main Graphics Setup/loop
     playerCells.push(allNodes[0])
 
+    function getScreen(){
+        return {
+            x: window.innerWidth,
+            y: window.innerHeight
+        }
+    }
 
     function setUp() {
 
         //Create the renderer
-        renderer = PIXI.autoDetectRenderer(256, 256);
+        //renderer = PIXI.autoDetectRenderer(256, 256);
 
+        let win = getScreen();
+        if(PIXI.utils.isWebGLSupported()) renderer = new PIXI.WebGLRenderer(win.x,win.y; renderOptions);
+        else renderer = new Engine.CanvasRenderer(win.x,win.y,renderOptions);
+        
+        (!renderer) return alert("Could not establish renderer");
+        
+        renderer.backgroundColor = 0xFFFFFF;
+        
         //Add the canvas to the HTML document
         document.body.appendChild(renderer.view);
 
@@ -142,8 +160,7 @@
         renderer.view.style.display = "block";
 
         // Resize to fit screen
-        renderer.autoResize = true;
-        renderer.resize(window.innerWidth, window.innerHeight);
+        renderer.resize(win.x, win.y);
     }
 
     function gameLoop() {
@@ -204,6 +221,8 @@
         // scale
         stage.scale.set(viewZoom, viewZoom);
 
+        // remember, center anchor/origon is 0.5 
+        
         stage.pivot.set(tX, tY)
             //stage.pivot.set(x, y)
         console.log(viewZoom, stage.position, renderer.width)

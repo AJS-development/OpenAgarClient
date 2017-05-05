@@ -16,8 +16,7 @@
         players = [],
         skinCache = [],
         customSkins = [],
-        config = {
-        },
+        config = {},
         renderOptions = {
             autoResize: true,
             resolution: 1,
@@ -126,7 +125,7 @@
         // Main Graphics Setup/loop
     playerCells.push(allNodes[0])
 
-    function getScreen(){
+    function getScreen() {
         return {
             x: window.innerWidth,
             y: window.innerHeight
@@ -139,13 +138,13 @@
         //renderer = PIXI.autoDetectRenderer(256, 256);
 
         let win = getScreen();
-        if(PIXI.utils.isWebGLSupported()) renderer = new PIXI.WebGLRenderer(win.x,win.y; renderOptions);
-        else renderer = new Engine.CanvasRenderer(win.x,win.y,renderOptions);
-        
-        (!renderer) return alert("Could not establish renderer");
-        
+        if (PIXI.utils.isWebGLSupported()) renderer = new PIXI.WebGLRenderer(win.x, win.y, renderOptions);
+        else renderer = new Engine.CanvasRenderer(win.x, win.y, renderOptions);
+
+        if (!renderer) return alert("Could not establish renderer");
+
         renderer.backgroundColor = 0xFFFFFF;
-        
+
         //Add the canvas to the HTML document
         document.body.appendChild(renderer.view);
 
@@ -166,9 +165,6 @@
     function gameLoop() {
         time = Date.now();
         frameID = (frameID < 0xFFFFFFFF) ? frameID++ : frameID = 0;
-
-
-        allNodes
 
         allNodes.forEach((node) => {
             node.updatePos();
@@ -222,7 +218,7 @@
         stage.scale.set(viewZoom, viewZoom);
 
         // remember, center anchor/origon is 0.5 
-        
+
         stage.pivot.set(tX, tY)
             //stage.pivot.set(x, y)
         console.log(viewZoom, stage.position, renderer.width)

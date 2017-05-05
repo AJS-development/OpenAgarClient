@@ -5,8 +5,6 @@
     ALL RIGHTS RESERVED
 */
 
-
-
 (function (web, document, window, PIXI) {
     // Variables
 
@@ -41,6 +39,7 @@
             this.id = id;
             this.x = x;
             this.y = y;
+            this.order = 0;
             this.oldX = x;
             this.maxX = x;
             this.oldY = y;
@@ -151,19 +150,23 @@
         time = Date.now();
         frameID = (frameID < 0xFFFFFFFF) ? frameID++ : frameID = 0;
 
-        allNodes.sort(function (a, b) { // sort by size for overlap rules
-            return a.size - b.size;
-        })
+
+        allNodes
 
         allNodes.forEach((node) => {
             node.updatePos();
             if (node.node) updateNode(node);
             else drawNode(node);
         })
+
         virusNodes.forEach((node) => { // viruses have overlap priority
             node.updatePos();
             if (node.node) updateNode(node);
             else drawNode(node);
+
+        })
+        stage.children.sort(function (a, b) { // sort by size for overlap rules
+            return (a.order || a.size - b.size);
         })
         camera()
             // Draw stuff
@@ -205,6 +208,10 @@
             //stage.pivot.set(x, y)
         console.log(viewZoom, stage.position, renderer.width)
     }
+
+
+
+    // Functions
 
     function viewRange() {
         var ratio;

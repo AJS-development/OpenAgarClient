@@ -118,7 +118,7 @@
 
 
     }
-    allNodes.push(new Node(1, 100, 100, 200, 100))
+    allNodes.push(new Node(1, 100, 100, 20000, 100))
         // Main Graphics Setup/loop
     playerCells.push(allNodes[0])
 
@@ -193,7 +193,7 @@
         tX = tX / playerCells.length
         tY = tY / playerCells.length
         var newViewZoom = total;
-        newViewZoom = Math.pow(Math.min(64 / newViewZoom, 1), .4) * viewRange();
+        newViewZoom = Math.pow(Math.min(64 / newViewZoom, .0001), .4) * viewRange();
         viewZoom = (9 * viewZoom + newViewZoom) / 10;
         //var x = Math.floor((stage.pivot.x + tX) / 2);
         // var y = Math.floor((stage.pivot.y + tY) / 2)

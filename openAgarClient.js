@@ -26,7 +26,7 @@
 
     var nodes = new HashBounds(),
         nodeCache = [],
-        playerCell = [],
+        playerCells = [],
         players = [],
         skinCache = [],
         customSkins = [],
@@ -168,7 +168,31 @@
 
 
 
+    function camera() {
+        var total = 0;
+        var tX = 0,
+            tY = 0;
+        playerCells.forEach((node) => {
+            total += node.size
+            tX += node.x;
+            tY += node.y;
+        })
+        tX = tX / playerCells.length
+        tY = tY / playerCells.length
+        var newViewZoom = total;
+        newViewZoom = Math.pow(Math.min(64 / newViewZoom, 1), .4) * viewRange();
+        viewZoom = (9 * viewZoom + newViewZoom) / 10;
+        stage.scale.set(viewZoom, viewZoom);
 
+        stage.position.x = Math.floor((stage.position.x + tX) / 2)
+        stage.position.y = Math.floor((stage.position.y + tY) / 2)
+    }
+
+    function viewRange() {
+        var ratio;
+        ratio = Math.max(render.height / 1080, render.width / 1920);
+        return ratio;
+    }
 
     function drawNode(node) {
         var circle = new PIXI.Graphics();
@@ -185,7 +209,6 @@
         circle.position.set(node.x, node.y);
         circle.width = node.size >> 2;
         circle.height = node.size >> 2;
-
     }
 
 

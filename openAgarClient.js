@@ -136,6 +136,7 @@
         // Main Graphics Setup/loop
     playerCells.push(allNodes[0])
 
+
     function setUp() {
 
         //Create the renderer
@@ -185,25 +186,34 @@
         var tX = 0,
             tY = 0;
         playerCells.forEach((node) => {
+
             total += node.size
             tX += node.x;
             tY += node.y;
         })
+
         tX = tX / playerCells.length
         tY = tY / playerCells.length
         var newViewZoom = total;
         newViewZoom = Math.pow(Math.min(64 / newViewZoom, 1), .4) * viewRange();
         viewZoom = (9 * viewZoom + newViewZoom) / 10;
+        //var x = Math.floor((stage.pivot.x + tX) / 2);
+        // var y = Math.floor((stage.pivot.y + tY) / 2)
+
+        //(0,0) for us is center of the screen
+        stage.position.x = renderer.width / 2;
+        stage.position.y = renderer.height / 2;
+        // scale
         stage.scale.set(viewZoom, viewZoom);
 
-        stage.position.x = -Math.floor((stage.position.x + tX) / 2)
-        stage.position.y = -Math.floor((stage.position.y + tY) / 2)
-        console.log(viewZoom, stage.position)
+        stage.pivot.set(tX, tY)
+            //stage.pivot.set(x, y)
+        console.log(viewZoom, stage.position, renderer.width)
     }
 
     function viewRange() {
         var ratio;
-        ratio = Math.max(renderer.height / 1080, renderer.width / 1920);
+        ratio = Math.max(renderer.height / 300, renderer.width / 300);
         return ratio;
     }
 

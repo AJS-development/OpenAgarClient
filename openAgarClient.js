@@ -41,19 +41,19 @@
     // Classes
         
     class Node {
-     constructor(x,y,velocity,accel,size,mass) {
+     constructor(x,y,size,mass) {
          this.x = x;
          this.y = y;
          this.oldX = x;
          this.maxX = x;
          this.oldY = y;
          this.maxY = y;
+         this.angle = 0;
          this.oldSize = size;
          this.size = size;
          this.newSize = size;
          this.mass = mass;
-         this.velocity = velocity;
-         this.acceleration = accel;
+         this.velocity = 0;
          this.posTime = time;
         }
         setPos(x,y) {
@@ -65,15 +65,20 @@
          this.maxY = y;
             this.posTime = time;
         }
-        setMove(x,y,velocity,mx,my) {
+        setMove(x,y,mx,my,velocity,angle) {
          this.x = x;
          this.y = y;
+            this.angle = angle;
             this.velocity = velocity;
          this.oldX = x;
          this.maxX = mx;
          this.oldY = y;
          this.maxY = my;
-            this.posTime = time;
+       this.angle = angle;
+            this.cos = Math.cos(angle)
+            this.sin = Math.sin(angle)
+            
+            
         }
         setSize(size) {
             this.oldSize = size;
@@ -81,10 +86,28 @@
             this.newSize = size;
         }
         updatePos() {
+            if (!this.velocity) { // Older servers
+                var a = (time - this.posTime) / 120;
+            this.x = a * (this.maxX - this.oldX) + this.oldX;
+            this.y = a * (this.maxY - this.oldY) + this.oldY;
+                
+            } else { // OpenAgar
            var step = (time - this.posTime) * this.velocity;
-            this.x = this.oldX + step;
-            this.y = this.oldY + step;
-            
+            this.x = this.oldX + this.cos * step;
+            this.y = this.oldY + this.sin * step;
+                
+                if (this.maxX > this.oldX) { // maximum
+                   this.x = Math.min(this.maxX,this.x); 
+                } else {
+                    this.x = Math.max(this.maxX,this.x);
+                }
+                if (this.maxY > this.oldY) {
+                   this.x = Math.min(this.maxY,this.x); 
+                } else {
+                    this.x = Math.max(this.maxY,this.x);
+                }
+                
+            }
         }
         
         

@@ -21,7 +21,7 @@
 
 
 
-(function(web) {
+(function(web,document,window,pixi) {
     // Variables
     
     var nodes = new HashBounds(),
@@ -41,7 +41,8 @@
     // Classes
         
     class Node {
-     constructor(x,y,size,mass) {
+     constructor(id,x,y,size,mass) {
+         this.id = id;
          this.x = x;
          this.y = y;
          this.oldX = x;
@@ -93,8 +94,8 @@
                 
             } else { // OpenAgar
            var step = (time - this.posTime) * this.velocity;
-            this.x = this.oldX + this.cos * step;
-            this.y = this.oldY + this.sin * step;
+            this.x = this.oldX + (this.cos * step);
+            this.y = this.oldY + (this.sin * step);
                 
                 if (this.maxX > this.oldX) { // maximum
                    this.x = Math.min(this.maxX,this.x); 
@@ -102,9 +103,9 @@
                     this.x = Math.max(this.maxX,this.x);
                 }
                 if (this.maxY > this.oldY) {
-                   this.x = Math.min(this.maxY,this.x); 
+                   this.y = Math.min(this.maxY,this.y); 
                 } else {
-                    this.x = Math.max(this.maxY,this.x);
+                    this.y = Math.max(this.maxY,this.y);
                 }
                 
             }
@@ -125,4 +126,4 @@
     gameLoop();
     
     
-})($)
+})($,document,window,PIXI)

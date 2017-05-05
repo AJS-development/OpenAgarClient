@@ -33,6 +33,11 @@
 
     var renderer,
         stage,
+        camera,
+        chat,
+        chatBox,
+        lbRect,
+        leaderBoard,
         viewZoom = 0;
 
     // Classes
@@ -121,7 +126,7 @@
 
 
     }
-    allNodes.push(new Node(1, 100, 100, 20000, 100))
+    allNodes.push(new Node(1, 1, 1, 100, 100))
         // Main Graphics Setup/loop
     playerCells.push(allNodes[0])
 
@@ -133,6 +138,22 @@
     }
 
     function setUp() {
+        /*
+                         +-----------+
+                         |  Camera   |
+                         |           |
+                         +-----+-----+
+                               |
+      +----------------------------------------------+
+      |                        |                     |
+      |                        |                     |
+      |                        |                     |
++-----+-----+            +-----+-----+        +------+------+
+|           |            |           |        |             |
+|   Game    |            |Leaderboard|        |    Chat     |
+|           |            |           |        |             |
++-----------+            +-----------+        +-------------+
+        */
 
         //Create the renderer
         //renderer = PIXI.autoDetectRenderer(256, 256);
@@ -151,8 +172,34 @@
         //Create a container object called the `stage`
         stage = new PIXI.Container();
 
+        // Create camera
+        camera = new PIXI.Container();
+        camera.addChild(stage)
+
+        // Create Chat
+        chat = new PIXI.Container()
+        chatBox = new PIXI.Graphics();
+        chatBox.alpha = .4
+        chatBox.beginFill(0xCCCCCC);
+        chatBox.drawRect(0, 0, 300, 30)
+        chatBox.position.set(10, renderer.height - 40)
+        chatBox.endFill();
+        chat.addChild(chatBox);
+        camera.addChild(chat);
+
+        // Create Leaderboard
+        leaderBoard = new PIXI.Container();
+        lbRect = new PIXI.Graphics();
+        lbRect.alpha = .4
+        lbRect.beginFill(0xCCCCCC);
+        lbRect.drawRect(0, 0, 140, 215)
+        lbRect.position.set(renderer.width - 150, 10)
+        lbRect.endFill();
+        leaderBoard.addChild(lbRect)
+        camera.addChild(leaderBoard);
+
         //Tell the `renderer` to `render` the `stage`
-        renderer.render(stage);
+        renderer.render(camera)
 
         // CSS
         renderer.view.style.position = "absolute";
@@ -181,9 +228,9 @@
         stage.children.sort(function (a, b) { // sort by size for overlap rules
             return (a.order || a.size - b.size);
         })
-        camera()
+        moveCamera()
             // Draw stuff
-        renderer.render(stage);
+        renderer.render(camera);
         window.requestAnimationFrame(gameLoop);
 
     }
@@ -192,7 +239,7 @@
 
 
 
-    function camera() {
+    function moveCamera() {
         var total = 0;
         var tX = 0,
             tY = 0;
@@ -221,7 +268,7 @@
 
         stage.pivot.set(tX, tY)
             //stage.pivot.set(x, y)
-        console.log(viewZoom, stage.position, renderer.width)
+            // console.log(viewZoom, stage.position, renderer.width)
     }
 
 
@@ -230,7 +277,7 @@
 
     function viewRange() {
         var ratio;
-        ratio = Math.max(renderer.height / 300, renderer.width / 300);
+        ratio = Math.max(renderer.height / 7, renderer.width / 7);
         return ratio;
     }
 

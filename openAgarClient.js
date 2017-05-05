@@ -21,65 +21,72 @@
 
 
 
-(function(web,document,window,pixi) {
+(function (web, document, window, PIXI) {
     // Variables
-    
+
     var nodes = new HashBounds(),
         nodeCache = [],
+        playerCell = [],
+        players = [],
         skinCache = [],
         customSkins = [],
         config = {
-            
-            
+
+
         };
-    
+
     // System Variables
-    
+
     var time = Date.now(),
         frameID = 0;
-    
+
+    // Visual Variables
+
+    var renderer,
+        stage;
+
     // Classes
-        
+
     class Node {
-     constructor(id,x,y,size,mass) {
-         this.id = id;
-         this.x = x;
-         this.y = y;
-         this.oldX = x;
-         this.maxX = x;
-         this.oldY = y;
-         this.maxY = y;
-         this.angle = 0;
-         this.oldSize = size;
-         this.size = size;
-         this.newSize = size;
-         this.mass = mass;
-         this.velocity = 0;
-         this.posTime = time;
-        }
-        setPos(x,y) {
-         this.x = x;
-         this.y = y;
-         this.oldX = x;
-         this.maxX = x;
-         this.oldY = y;
-         this.maxY = y;
+        constructor(id, x, y, size, mass) {
+            this.id = id;
+            this.x = x;
+            this.y = y;
+            this.oldX = x;
+            this.maxX = x;
+            this.oldY = y;
+            this.maxY = y;
+            this.angle = 0;
+            this.oldSize = size;
+            this.size = size;
+            this.newSize = size;
+            this.mass = mass;
+            this.velocity = 0;
             this.posTime = time;
         }
-        setMove(x,y,mx,my,velocity,angle) {
-         this.x = x;
-         this.y = y;
+        setPos(x, y) {
+            this.x = x;
+            this.y = y;
+            this.oldX = x;
+            this.maxX = x;
+            this.oldY = y;
+            this.maxY = y;
+            this.posTime = time;
+        }
+        setMove(x, y, mx, my, velocity, angle) {
+            this.x = x;
+            this.y = y;
             this.angle = angle;
             this.velocity = velocity;
-         this.oldX = x;
-         this.maxX = mx;
-         this.oldY = y;
-         this.maxY = my;
-       this.angle = angle;
+            this.oldX = x;
+            this.maxX = mx;
+            this.oldY = y;
+            this.maxY = my;
+            this.angle = angle;
             this.cos = Math.cos(angle)
             this.sin = Math.sin(angle)
-            
-            
+
+
         }
         setSize(size) {
             this.oldSize = size;
@@ -89,41 +96,97 @@
         updatePos() {
             if (!this.velocity) { // Older servers
                 var a = (time - this.posTime) / 120;
-            this.x = a * (this.maxX - this.oldX) + this.oldX;
-            this.y = a * (this.maxY - this.oldY) + this.oldY;
-                
+                this.x = a * (this.maxX - this.oldX) + this.oldX;
+                this.y = a * (this.maxY - this.oldY) + this.oldY;
+
             } else { // OpenAgar
-           var step = (time - this.posTime) * this.velocity;
-            this.x = this.oldX + (this.cos * step);
-            this.y = this.oldY + (this.sin * step);
-                
+                var step = (time - this.posTime) * this.velocity;
+                this.x = this.oldX + (this.cos * step);
+                this.y = this.oldY + (this.sin * step);
+
                 if (this.maxX > this.oldX) { // maximum
-                   this.x = Math.min(this.maxX,this.x); 
+                    this.x = Math.min(this.maxX, this.x);
                 } else {
-                    this.x = Math.max(this.maxX,this.x);
+                    this.x = Math.max(this.maxX, this.x);
                 }
                 if (this.maxY > this.oldY) {
-                   this.y = Math.min(this.maxY,this.y); 
+                    this.y = Math.min(this.maxY, this.y);
                 } else {
-                    this.y = Math.max(this.maxY,this.y);
+                    this.y = Math.max(this.maxY, this.y);
                 }
-                
+
             }
         }
-        
-        
+        getBounds() {
+            return {
+                x: this.x - this.size,
+                y: this.y - this.size,
+                width: this.size >> 1,
+                height: this.size >> 1
+            }
+
+        }
+
+
     }
-    
-    
+
+    // Main Graphics Setup/loop
+
+    function setUp() {
+
+        //Create the renderer
+        renderer = PIXI.autoDetectRenderer(256, 256);
+
+        //Add the canvas to the HTML document
+        document.body.appendChild(renderer.view);
+
+        //Create a container object called the `stage`
+        stage = new PIXI.Container();
+
+        //Tell the `renderer` to `render` the `stage`
+        renderer.render(stage);
+
+        // CSS
+        renderer.view.style.position = "absolute";
+        renderer.view.style.display = "block";
+
+        // Resize to fit screen
+        renderer.autoResize = true;
+        renderer.resize(window.innerWidth, window.innerHeight);
+    }
+
     function gameLoop() {
         time = Date.now();
-        frameID = (frameID < 0xFFFFFFFF) ? frameID ++ : frameID = 0;
-        
+        frameID = (frameID < 0xFFFFFFFF) ? frameID++ : frameID = 0;
+
         // Draw stuff
-        
-        window.requestAnimationFrame(gameLoop);       
+        renderer.render(stage);
+        window.requestAnimationFrame(gameLoop);
     }
+    setUp()
     gameLoop();
-    
-    
-})($,document,window,PIXI)
+
+
+
+
+
+    function drawNode(node) {
+        var circle = new PIXI.Graphics();
+        node.node = circle;
+        circle.beginFill(node.color);
+        circle.drawCircle(0, 0, node.size);
+        circle.position.set(node.x, node.y)
+        circle.endFill();
+        stage.addChild(circle);
+    }
+
+    function updateNode(node) {
+        var circle = node.node;
+        circle.position.set(node.x, node.y);
+        circle.width = node.size >> 2;
+        circle.height = node.size >> 2;
+
+    }
+
+
+})($, document, window, PIXI)

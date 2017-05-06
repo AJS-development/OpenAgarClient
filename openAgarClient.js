@@ -189,12 +189,12 @@
     // Create Chat
     chat.container = new PIXI.Container();
     chat.graphics = new PIXI.Graphics();
-    chat.graphics.alpha = .9;
+    chat.graphics.alpha = .7;
     chat.graphics.beginFill(0xCCCCCC);
     chat.graphics.drawRect(0, 0, 300, 30);
-    chat.graphics.position.set(10, renderer.height - 40)
     chat.graphics.endFill();
-    
+    chat.graphics.position.set(10, renderer.height - 40)
+	  
     chat.placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
       fontSize: 15,
@@ -204,8 +204,7 @@
     }));
     chat.placeholder.alpha = .7;
     chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
-    
-    chat.placeholder.alpha = .3;
+	  
     chat.container.addChild(chat.graphics);
     chat.container.addChild(chat.placeholder);
     camera.addChild(chat.container);
@@ -223,23 +222,14 @@
     leaderBoard.graphics = new PIXI.Graphics();
     leaderBoard.graphics.alpha = .7;
     leaderBoard.graphics.beginFill(0xCCCCCC);
-    leaderBoard.graphics.drawRect(0, 0, 140, 215)
-    leaderBoard.graphics.position.set(renderer.width - 150, 10);
+    leaderBoard.graphics.drawRect(0, 0, 140, 215);
     leaderBoard.graphics.endFill();
-    leaderBoard.container.addChild(leaderBoard.graphics)
+    leaderBoard.graphics.position.set(renderer.width - 150, 10);
+    leaderBoard.container.addChild(leaderBoard.graphics);
     leaderBoard.container.addChild(leaderBoard.title);
-    // ok, so the leaderboard title should stay left of the leaderboard
-    //leaderBoard.title.position.set(renderer.width - 150, 15);
     leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2,leaderBoard.graphics.y + 15);
     leaderBoard.title.anchor.x = leaderBoard.title.anchor.y = 0.5
 
-    //leaderBoard.title.position.set(renderer.width - 150 + (leaderBoard.graphics.width/10), 15);
-    //
-    // the title should match the leaderboard width, in which align: center TextStyle property should work? 
-    //leaderBoard.title.width = leaderboard_graphics.width;
-
-    // .. No, it doesn't 
-    
     // score
     
     score.container = new PIXI.Container();
@@ -247,6 +237,7 @@
     score.graphics.alpha = .7;
     score.graphics.beginFill(0xCCCCCC);
     score.graphics.drawRect(0,0,130, 35);
+    score.graphics.endFill();
     score.graphics.position.set(10,10);
     
     score.text = new PIXI.Text("Score: 100", new PIXI.TextStyle({
@@ -257,20 +248,15 @@
       fill: 0x000099,
       fontWeight: "bold",
     }));
-    score.text.alpha = .6;
     score.text.position.set(score.graphics.x + 8, score.graphics.y + 9);
+	  
     score.container.addChild(score.graphics);
     score.container.addChild(score.text);
     camera.addChild(score.container);
-    
-    
-
     camera.addChild(leaderBoard.container);
-
     camera.addChild(stage)
     //Tell the `renderer` to `render` the `stage`
     renderer.render(camera)
-
 
     // CSS
     renderer.view.style.position = "absolute";
@@ -385,28 +371,21 @@
 
 
   function drawNode(node) {
-    var tex = new PIXI.Graphics();
-    tex.beginFill(node.color);
-    tex.drawCircle(0, 0, node.size);
-    tex.endFill();
-
-    // I wouldn't recommend using graphics, but the texture instead, on a sprite
-    var circle = new PIXI.Sprite();
-    circle.texture = tex.generateCanvasTexture(0, 1);
-    circle.anchor.x = 0.5;
-    circle.anchor.y = 0.5;
-    
-    // this need to be stored with the node itself
-    let node_name = new PIXI.Text("AJS", new PIXI.TextStyle({
+    var circle = new PIXI.Graphics();
+    circle.beginFill(node.color);
+    circle.drawCircle(0, 0, node.size);
+    circle.endFill();
+	  
+    var name = new PIXI.Text("AJS", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
       fontSize: 20,
       align: "center",
       breakWords: true,
       fill: 0xFFFFFF,
     }));
-    node_name.anchor.x = node_name.anchor.y = 0.5;
-    node_name.position.set(circle.x, circle.y);
-    circle.addChild(node_name);
+    name.anchor.x = name.anchor.y = 0.5;
+    name.position.set(circle.x, circle.y);
+    circle.addChild(name);
     node.node = circle;
     stage.addChild(circle);
   }

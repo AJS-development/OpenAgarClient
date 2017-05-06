@@ -200,9 +200,10 @@
     }));
     chat_placeholder.alpha = .7;
     chat_placeholder.position.set(chat_graphics.x + 10, chat_graphics.y + 6);
-    chat.container.addChild(chat_placeholder);
-
+    
+    chat_placeholder.alpha = .3;
     chat.container.addChild(chat_graphics);
+    chat.container.addChild(chat_placeholder);
     camera.addChild(chat.container);
 
     // Create Leaderboard
@@ -212,6 +213,7 @@
       fontSize: 15,
       align: "center",
       breakWords: true,
+      fontWeight: "bold",
       fill: 0x000099,
     }));
     let leaderboard_graphics = new PIXI.Graphics();
@@ -248,10 +250,11 @@
       fontSize: 15,
       align: "center",
       breakWords: true,
-      fill: 0x000000,
+      fill: 0x000099,
       fontWeight: "bold",
     }));
-    score.text.position.set(score_graphics.x + 8, score_graphics.y + 8);
+    score.text.alpha = .6;
+    score.text.position.set(score_graphics.x + 8, score_graphics.y + 9);
     score.container.addChild(score_graphics);
     score.container.addChild(score.text);
     camera.addChild(score.container);

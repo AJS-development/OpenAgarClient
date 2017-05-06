@@ -30,7 +30,6 @@
     frameID = 0;
 
   // Visual Variables
-
   var renderer,
     stage,
     camera,
@@ -213,42 +212,44 @@
     leaderBoard.container = new PIXI.Container();
     leaderBoard.title = new PIXI.Text("", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
-      fontSize: 15,
+      fontSize: 25,
       align: "center",
       breakWords: true,
       fontWeight: "bold",
-      fill: 0x000099,
+      fill: 0xFFFFFF,
     }));
     leaderBoard.graphics = new PIXI.Graphics();
     leaderBoard.graphics.alpha = .7;
     leaderBoard.graphics.beginFill(0xCCCCCC);
-    leaderBoard.graphics.drawRect(0, 0, 140, 215);
+    leaderBoard.graphics.drawRect(0, 0, 200, 345);
     leaderBoard.graphics.endFill();
     leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
     leaderBoard.container.addChild(leaderBoard.graphics);
-    leaderBoard.container.addChild(leaderBoard.title);
-    leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2,leaderBoard.graphics.y + 15);
+	
+    leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2,leaderBoard.graphics.y + 20);
     leaderBoard.title.anchor.x = leaderBoard.title.anchor.y = 0.5
+    leaderBoard.container.addChild(leaderBoard.title);
 
     // score
     
     score.container = new PIXI.Container();
     score.graphics = new PIXI.Graphics();
-    score.graphics.alpha = .7;
-    score.graphics.beginFill(0xCCCCCC);
-    score.graphics.drawRect(0,0,130, 35);
-    score.graphics.endFill();
-    score.graphics.position.set(10,10);
     
     score.text = new PIXI.Text("Score: 100", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
-      fontSize: 15,
+      fontSize: 24,
       align: "center",
       breakWords: true,
-      fill: 0x000099,
+      fill: 0xFFFFFF,
       fontWeight: "bold",
     }));
-    score.text.position.set(score.graphics.x + 8, score.graphics.y + 9);
+	
+    score.graphics.alpha = .8;
+    score.graphics.beginFill(0xCCCCCC);
+    score.graphics.drawRect(0,0,score.text.width + 10, 35); // re-sizes via text with + 10
+    score.graphics.endFill();
+    score.graphics.position.set(10,10);
+    score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
 	  
     score.container.addChild(score.graphics);
     score.container.addChild(score.text);
@@ -262,12 +263,14 @@
     renderer.view.style.position = "absolute";
     renderer.view.style.display = "block";
 
+	
     // Resize to fit screen
     resize();
     gameLoop();
   }
 
   function gameLoop() {
+	  
     time = Date.now();
     frameID = (frameID < 0xFFFFFFFF) ? frameID++ : frameID = 0;
 
@@ -288,17 +291,7 @@
     })
     moveCamera()
     // Draw stuff
-    var nodes = [{
-        name: "Bot"
-      },
-      {
-        name: "Bot1"
-      },
-      {
-        name: "Bot2"
-      }
-    ];
-    updateLeaderBoard(nodes, "Leaderboard")
+    updateLeaderBoard([], "Leaderboard")
 
 
     renderer.render(camera);

@@ -388,6 +388,18 @@
     circle.texture = tex.generateCanvasTexture(0, 1);
     circle.anchor.x = 0.5;
     circle.anchor.y = 0.5;
+    
+    // this need to be stored with the node itself
+    let node_name = new PIXI.Text("AJS", new PIXI.TextStyle({
+      fontfamily: 'Ubuntu',
+      fontSize: 20,
+      align: "center",
+      breakWords: true,
+      fill: 0xFFFFFF,
+    }));
+    node_name.anchor.x = node_name.anchor.y = 0.5;
+    node_name.position.set(circle.x, circle.y);
+    circle.addChild(node_name);
     node.node = circle;
     stage.addChild(circle);
   }

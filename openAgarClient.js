@@ -34,10 +34,16 @@
     var renderer,
         stage,
         camera,
-        chat,
-        chatBox,
-        lbRect,
-        leaderBoard,
+        chat = {
+        	container: {},
+        	graphics: null
+        },
+        leaderBoard = {
+        	container: {},
+        	graphics: null,
+        	title: null,
+        	nodes: null
+        },
         viewZoom = 0;
 
     // Classes
@@ -174,39 +180,45 @@
 
         // Create camera
         camera = new PIXI.Container();
-        camera.addChild(stage)
 
         // Create Chat
-        chat = new PIXI.Container()
-        chatBox = new PIXI.Graphics();
-        chatBox.alpha = .4
-        chatBox.beginFill(0xCCCCCC);
-        chatBox.drawRect(0, 0, 300, 30)
-        chatBox.position.set(10, renderer.height - 40)
-        chatBox.endFill();
-        chat.addChild(chatBox);
-        camera.addChild(chat);
+        chat.container = new PIXI.Container()
+        chat.graphics = new PIXI.Graphics();
+        chat.graphics.alpha = .9
+        chat.graphics.beginFill(0xCCCCCC);
+        chat.graphics.drawRect(0, 0, 300, 30)
+        chat.graphics.position.set(10, renderer.height - 40)
+        chat.graphics.endFill();
+        
+        chat.container.addChild(chat.graphics);
+        camera.addChild(chat.container);
 
         // Create Leaderboard
-        leaderBoard = new PIXI.Container();
-        lbRect = new PIXI.Graphics();
-        lbRect.alpha = .4
-        lbRect.beginFill(0xCCCCCC);
-        lbRect.drawRect(0, 0, 140, 215)
-        lbRect.position.set(renderer.width - 150, 10)
-        lbRect.endFill();
-        leaderBoard.addChild(lbRect)
-        camera.addChild(leaderBoard);
+        leaderBoard.container = new PIXI.Container();
+        leaderBoard.title = new PIXI.Text("", new PIXI.TextStyle({fontfamily: 'Ubuntu',fontSize:20,align:"center",breakWords: false,fill:0x000099,}));
+        leaderBoard.graphics = new PIXI.Graphics();
+        leaderBoard.graphics.alpha = .9
+        leaderBoard.graphics.beginFill(0xCCCCCC);
+        leaderBoard.graphics.drawRect(0, 0, 140, 215)
+        leaderBoard.graphics.position.set(renderer.width - 150, 10)
+        leaderBoard.graphics.endFill();
+        leaderBoard.container.addChild(leaderBoard.graphics)
+        leaderBoard.container.addChild(leaderBoard.title);
+        leaderBoard.title.position.set(renderer.width - 150 + (leaderBoard.graphics.width/10), 15);
+        camera.addChild(leaderBoard.container);
 
+				camera.addChild(stage)
         //Tell the `renderer` to `render` the `stage`
         renderer.render(camera)
+
 
         // CSS
         renderer.view.style.position = "absolute";
         renderer.view.style.display = "block";
 
         // Resize to fit screen
-        renderer.resize(win.x, win.y);
+	      resize();
+        gameLoop();
     }
 
     function gameLoop() {
@@ -230,21 +242,50 @@
         })
         moveCamera()
             // Draw stuff
+            var nodes = [
+            	{
+            		name: "Bot"
+            	},
+            	{
+            		name: "Bot1"
+            	},
+            	{
+            		name: "Bot2"
+            	}
+            ];
+            updateLeaderBoard(nodes, "Leaderboard")
+            
+            
         renderer.render(camera);
         window.requestAnimationFrame(gameLoop);
-
     }
-    setUp()
-    gameLoop();
-
-
+    
+    //
+    window.addEventListener('resize', resize);
+    //
+    function resize(){
+    	if(renderer != null){
+	    	let win = getScreen();
+	    	renderer.resize(win.x, win.y);
+    	}
+    }
+    
+    function updateLeaderBoard(nodes, title = "Leaderboard"){
+    	if(!(nodes instanceof Array)) return;
+    	
+    	// first lets draw the title.
+    	leaderBoard.title.text = title;
+    
+    	if(nodes.length < 1) return;
+    	for(var i = 0; i < nodes.length; i++){
+    		
+    	}
+    }
 
     function moveCamera() {
         var total = 0;
-        var tX = 0,
-            tY = 0;
+        var tX = 0, tY = 0;
         playerCells.forEach((node) => {
-
             total += node.size
             tX += node.x;
             tY += node.y;
@@ -281,13 +322,20 @@
         return ratio;
     }
 
+		
+
     function drawNode(node) {
-        var circle = new PIXI.Graphics();
+        var tex = new PIXI.Graphics();
+        tex.beginFill(node.color);
+        tex.drawCircle(0, 0, node.size);
+        tex.endFill();
+        
+        // I wouldn't recommend using graphics, but the texture instead, on a sprite
+        var circle = new PIXI.Sprite();
+        circle.texture = tex.generateCanvasTexture(0,1);
+        circle.anchor.x = 0.5;
+        circle.anchor.y = 0.5;
         node.node = circle;
-        circle.beginFill(node.color);
-        circle.drawCircle(0, 0, node.size);
-        circle.position.set(node.x, node.y)
-        circle.endFill();
         stage.addChild(circle);
     }
 
@@ -298,5 +346,6 @@
         circle.height = node.size >> 2;
     }
 
-
+		
+    setUp()
 })($, document, window, PIXI)

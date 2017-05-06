@@ -35,14 +35,14 @@
         stage,
         camera,
         chat = {
-        	container: {},
-        	graphics: null
+            container: null,
+            graphics: null
         },
         leaderBoard = {
-        	container: {},
-        	graphics: null,
-        	title: null,
-        	nodes: null
+            container: null,
+            graphics: null,
+            title: null,
+            nodes: null
         },
         viewZoom = 0;
 
@@ -88,8 +88,6 @@
             this.angle = angle;
             this.cos = Math.cos(angle)
             this.sin = Math.sin(angle)
-
-
         }
         setSize(size) {
             this.oldSize = size;
@@ -195,7 +193,7 @@
 
         // Create Leaderboard
         leaderBoard.container = new PIXI.Container();
-        leaderBoard.title = new PIXI.Text("", new PIXI.TextStyle({fontfamily: 'Ubuntu',fontSize:20,align:"center",breakWords: false,fill:0x000099,}));
+        leaderBoard.title = new PIXI.Text("", new PIXI.TextStyle({fontfamily: 'Ubuntu',fontSize:15,align:"center",breakWords: false,fill:0x000099,}));
         leaderBoard.graphics = new PIXI.Graphics();
         leaderBoard.graphics.alpha = .9
         leaderBoard.graphics.beginFill(0xCCCCCC);
@@ -204,7 +202,15 @@
         leaderBoard.graphics.endFill();
         leaderBoard.container.addChild(leaderBoard.graphics)
         leaderBoard.container.addChild(leaderBoard.title);
-        leaderBoard.title.position.set(renderer.width - 150 + (leaderBoard.graphics.width/10), 15);
+        // ok, so the leaderboard title should stay left of the leaderboard
+        leaderBoard.title.position.set(renderer.width - 150, 15);
+        //leaderBoard.title.position.set(renderer.width - 150 + (leaderBoard.graphics.width/10), 15);
+        //
+        // the title should match the leaderboard width, in which align: center TextStyle property should work? 
+        leaderBoard.title.width = leaderBoard.graphics.width;
+        
+      	// .. No, it doesn't 
+        
         camera.addChild(leaderBoard.container);
 
 				camera.addChild(stage)

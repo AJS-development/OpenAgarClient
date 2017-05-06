@@ -36,14 +36,18 @@
     camera,
     chat = {
       container: null,
+      graphics: null,
+      placeholder: null,
     },
     leaderBoard = {
       container: null,
+      graphics: null,
       title: null,
       nodes: null
     },
     score = {
     	container: null,
+	graphics: null,
     	text: null
     },
     viewZoom = 0;
@@ -183,27 +187,27 @@
 
 	
     // Create Chat
-    chat.container = new PIXI.Container()
-    let chat_graphics = new PIXI.Graphics();
-    chat_graphics.alpha = .9
-    chat_graphics.beginFill(0xCCCCCC);
-    chat_graphics.drawRect(0, 0, 300, 30)
-    chat_graphics.position.set(10, renderer.height - 40)
-    chat_graphics.endFill();
+    chat.container = new PIXI.Container();
+    chat.graphics = new PIXI.Graphics();
+    chat.graphics.alpha = .9;
+    chat.graphics.beginFill(0xCCCCCC);
+    chat.graphics.drawRect(0, 0, 300, 30);
+    chat.graphics.position.set(10, renderer.height - 40)
+    chat.graphics.endFill();
     
-    let chat_placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
+    chat.placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
       fontSize: 15,
       align: "center",
       breakWords: true,
       fill: 0x000000,
     }));
-    chat_placeholder.alpha = .7;
-    chat_placeholder.position.set(chat_graphics.x + 10, chat_graphics.y + 6);
+    chat.placeholder.alpha = .7;
+    chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
     
-    chat_placeholder.alpha = .3;
-    chat.container.addChild(chat_graphics);
-    chat.container.addChild(chat_placeholder);
+    chat.placeholder.alpha = .3;
+    chat.container.addChild(chat.graphics);
+    chat.container.addChild(chat.placeholder);
     camera.addChild(chat.container);
 
     // Create Leaderboard
@@ -216,17 +220,17 @@
       fontWeight: "bold",
       fill: 0x000099,
     }));
-    let leaderboard_graphics = new PIXI.Graphics();
-    leaderboard_graphics.alpha = .7;
-    leaderboard_graphics.beginFill(0xCCCCCC);
-    leaderboard_graphics.drawRect(0, 0, 140, 215)
-    leaderboard_graphics.position.set(renderer.width - 150, 10);
-    leaderboard_graphics.endFill();
-    leaderBoard.container.addChild(leaderboard_graphics)
+    leaderBoard.graphics = new PIXI.Graphics();
+    leaderBoard.graphics.alpha = .7;
+    leaderBoard.graphics.beginFill(0xCCCCCC);
+    leaderBoard.graphics.drawRect(0, 0, 140, 215)
+    leaderBoard.graphics.position.set(renderer.width - 150, 10);
+    leaderBoard.graphics.endFill();
+    leaderBoard.container.addChild(leaderBoard.graphics)
     leaderBoard.container.addChild(leaderBoard.title);
     // ok, so the leaderboard title should stay left of the leaderboard
     //leaderBoard.title.position.set(renderer.width - 150, 15);
-    leaderBoard.title.position.set(leaderboard_graphics.x + leaderboard_graphics.width / 2, leaderboard_graphics.y + 15);
+    leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2,leaderBoard.graphics.y + 15);
     leaderBoard.title.anchor.x = leaderBoard.title.anchor.y = 0.5
 
     //leaderBoard.title.position.set(renderer.width - 150 + (leaderBoard.graphics.width/10), 15);
@@ -239,11 +243,11 @@
     // score
     
     score.container = new PIXI.Container();
-    let score_graphics = new PIXI.Graphics();
-    score_graphics.alpha = .7;
-    score_graphics.beginFill(0xCCCCCC);
-    score_graphics.drawRect(0,0,130, 35);
-    score_graphics.position.set(10,10);
+    score.graphics = new PIXI.Graphics();
+    score.graphics.alpha = .7;
+    score.graphics.beginFill(0xCCCCCC);
+    score.graphics.drawRect(0,0,130, 35);
+    score.graphics.position.set(10,10);
     
     score.text = new PIXI.Text("Score: 100", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
@@ -254,8 +258,8 @@
       fontWeight: "bold",
     }));
     score.text.alpha = .6;
-    score.text.position.set(score_graphics.x + 8, score_graphics.y + 9);
-    score.container.addChild(score_graphics);
+    score.text.position.set(score.graphics.x + 8, score.graphics.y + 9);
+    score.container.addChild(score.graphics);
     score.container.addChild(score.text);
     camera.addChild(score.container);
     

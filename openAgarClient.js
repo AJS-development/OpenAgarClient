@@ -188,6 +188,19 @@
         chat.graphics.position.set(10, renderer.height - 40)
         chat.graphics.endFill();
         
+	// chat placeholder
+        let chat_placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
+            fontfamily: 'Ubuntu',
+            fontSize: 15,
+            align: "center",
+            breakWords: true,
+            fill: 0x000000,
+            padding: 50
+        }));
+        chat_placeholder.alpha = .9;
+        chat_placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6); // tried 5 but my ocd denied
+        chat.container.addChild(chat_placeholder);
+	    
         chat.container.addChild(chat.graphics);
         camera.addChild(chat.container);
 

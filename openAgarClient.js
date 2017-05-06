@@ -166,7 +166,7 @@
 
     let win = getScreen();
     if (PIXI.utils.isWebGLSupported()) renderer = new PIXI.WebGLRenderer(win.x, win.y, renderOptions);
-    else renderer = new Engine.CanvasRenderer(win.x, win.y, renderOptions);
+    else renderer = new PIXI.CanvasRenderer(win.x, win.y, renderOptions);
 
     if (!renderer) return alert("Could not establish renderer");
 
@@ -240,11 +240,11 @@
     // score
     
     score.container = new PIXI.Container();
-    let score_grahics = new PIXI.Graphics();
-    score_grahics.alpha = .7;
-    score_grahics.beginFill(0xCCCCCC);
-    score_grahics.drawRect(0,0,130, 35);
-    score_grahics.position.set(10,10);
+    let score_graphics = new PIXI.Graphics();
+    score_graphics.alpha = .7;
+    score_graphics.beginFill(0xCCCCCC);
+    score_graphics.drawRect(0,0,130, 35);
+    score_graphics.position.set(10,10);
     
     score.text = new PIXI.Text("Score: 100", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
@@ -255,8 +255,8 @@
       fontWeight: "bold",
       padding: 50
     }));
-    score.text.position.set(score_grahics.x + 8, score_grahics.y + 8);
-    score.container.addChild(score_grahics);
+    score.text.position.set(score_graphics.x + 8, score_graphics.y + 8);
+    score.container.addChild(score_graphics);
     score.container.addChild(score.text);
     camera.addChild(score.container);
     
@@ -272,7 +272,7 @@
     // CSS
     renderer.view.style.position = "absolute";
     renderer.view.style.display = "block";
-      
+
     // Resize to fit screen
     resize();
     gameLoop();
@@ -320,7 +320,7 @@
   window.addEventListener('resize', resize);
   //
   function resize() {
-    if (renderer != null) {
+    if (renderer !== null) {
       let win = getScreen();
       renderer.resize(win.x, win.y);
     }

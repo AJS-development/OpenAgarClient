@@ -36,17 +36,14 @@
     camera,
     chat = {
       container: null,
-      graphics: null
     },
     leaderBoard = {
       container: null,
-      graphics: null,
       title: null,
       nodes: null
     },
     score = {
     	container: null,
-    	graphics: null,
     	text: null
     },
     viewZoom = 0;
@@ -184,16 +181,17 @@
     // Create camera
     camera = new PIXI.Container();
 
+	
     // Create Chat
     chat.container = new PIXI.Container()
-    chat.graphics = new PIXI.Graphics();
-    chat.graphics.alpha = .9
-    chat.graphics.beginFill(0xCCCCCC);
-    chat.graphics.drawRect(0, 0, 300, 30)
-    chat.graphics.position.set(10, renderer.height - 40)
-    chat.graphics.endFill();
-
-    var chat_placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
+    let chat_graphics = new PIXI.Graphics();
+    chat_graphics.alpha = .9
+    chat_graphics.beginFill(0xCCCCCC);
+    chat_graphics.drawRect(0, 0, 300, 30)
+    chat_graphics.position.set(10, renderer.height - 40)
+    chat_graphics.endFill();
+    
+    let chat_placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
       fontSize: 15,
       align: "center",
@@ -202,10 +200,10 @@
       padding: 50
     }));
     chat_placeholder.alpha = .7;
-    chat_placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
+    chat_placeholder.position.set(chat_graphics.x + 10, chat_graphics.y + 6);
     chat.container.addChild(chat_placeholder);
 
-    chat.container.addChild(chat.graphics);
+    chat.container.addChild(chat_graphics);
     camera.addChild(chat.container);
 
     // Create Leaderboard
@@ -218,13 +216,13 @@
       fill: 0x000099,
       padding: 50
     }));
-    leaderBoard.graphics = new PIXI.Graphics();
-    leaderBoard.graphics.alpha = .7;
-    leaderBoard.graphics.beginFill(0xCCCCCC);
-    leaderBoard.graphics.drawRect(0, 0, 140, 215)
-    leaderBoard.graphics.position.set(renderer.width - 150, 10);
-    leaderBoard.graphics.endFill();
-    leaderBoard.container.addChild(leaderBoard.graphics)
+    let leaderboard_graphics = new PIXI.Graphics();
+    leaderboard_graphics.alpha = .7;
+    leaderboard_graphics.beginFill(0xCCCCCC);
+    leaderboard_graphics.drawRect(0, 0, 140, 215)
+    leaderboard_graphics.position.set(renderer.width - 150, 10);
+    leaderboard_graphics.endFill();
+    leaderBoard.container.addChild(leaderboard_graphics)
     leaderBoard.container.addChild(leaderBoard.title);
     // ok, so the leaderboard title should stay left of the leaderboard
     //leaderBoard.title.position.set(renderer.width - 150, 15);
@@ -242,11 +240,11 @@
     // score
     
     score.container = new PIXI.Container();
-    score.graphics = new PIXI.Graphics();
-    score.graphics.alpha = .7;
-    score.graphics.beginFill(0xCCCCCC);
-    score.graphics.drawRect(0,0,130, 35);
-    score.graphics.position.set(5,5);
+    let score_grahics = new PIXI.Graphics();
+    score_grahics.alpha = .7;
+    score_grahics.beginFill(0xCCCCCC);
+    score_grahics.drawRect(0,0,130, 35);
+    score_grahics.position.set(10,10);
     
     score.text = new PIXI.Text("Score: 100", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
@@ -257,8 +255,8 @@
       fontWeight: "bold",
       padding: 50
     }));
-    score.text.position.set(score.graphics.x + 8, score.graphics.y + 8);
-    score.container.addChild(score.graphics);
+    score.text.position.set(score_grahics.x + 8, score_grahics.y + 8);
+    score.container.addChild(score_grahics);
     score.container.addChild(score.text);
     camera.addChild(score.container);
     
@@ -274,7 +272,7 @@
     // CSS
     renderer.view.style.position = "absolute";
     renderer.view.style.display = "block";
-
+      
     // Resize to fit screen
     resize();
     gameLoop();

@@ -188,7 +188,7 @@
     // Create Chat
     chat.container = new PIXI.Container();
     chat.graphics = new PIXI.Graphics();
-    chat.graphics.alpha = .7;
+    chat.graphics.alpha = .8;
     chat.graphics.beginFill(0xCCCCCC);
     chat.graphics.drawRect(0, 0, 300, 30);
     chat.graphics.endFill();
@@ -219,7 +219,7 @@
       fill: 0xFFFFFF,
     }));
     leaderBoard.graphics = new PIXI.Graphics();
-    leaderBoard.graphics.alpha = .7;
+    leaderBoard.graphics.alpha = .8;
     leaderBoard.graphics.beginFill(0xCCCCCC);
     leaderBoard.graphics.drawRect(0, 0, 200, 345);
     leaderBoard.graphics.endFill();

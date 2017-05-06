@@ -197,7 +197,6 @@
       align: "center",
       breakWords: true,
       fill: 0x000000,
-      padding: 50
     }));
     chat_placeholder.alpha = .7;
     chat_placeholder.position.set(chat_graphics.x + 10, chat_graphics.y + 6);
@@ -214,7 +213,6 @@
       align: "center",
       breakWords: true,
       fill: 0x000099,
-      padding: 50
     }));
     let leaderboard_graphics = new PIXI.Graphics();
     leaderboard_graphics.alpha = .7;
@@ -253,7 +251,6 @@
       breakWords: true,
       fill: 0x000000,
       fontWeight: "bold",
-      padding: 50
     }));
     score.text.position.set(score_graphics.x + 8, score_graphics.y + 8);
     score.container.addChild(score_graphics);

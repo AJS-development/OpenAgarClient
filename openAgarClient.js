@@ -224,14 +224,13 @@
     leaderBoard.container.addChild(leaderBoard.title);
     // ok, so the leaderboard title should stay left of the leaderboard
     //leaderBoard.title.position.set(renderer.width - 150, 15);
-    leaderBoard.title.position.set(renderer.width - 150 / 2, 25);
-    leaderBoard.title.anchor.x = 0.5;
-    leaderBoard.title.anchor.y = 0.5;
+    leaderBoard.title.position.set(leaderboard_graphics.x + leaderboard_graphics.width / 2, leaderboard_graphics.y + 15);
+    leaderBoard.title.anchor.x = leaderBoard.title.anchor.y = 0.5
 
     //leaderBoard.title.position.set(renderer.width - 150 + (leaderBoard.graphics.width/10), 15);
     //
     // the title should match the leaderboard width, in which align: center TextStyle property should work? 
-    //leaderBoard.title.width = leaderBoard.graphics.width;
+    //leaderBoard.title.width = leaderboard_graphics.width;
 
     // .. No, it doesn't 
     

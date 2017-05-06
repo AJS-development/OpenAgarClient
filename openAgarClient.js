@@ -193,7 +193,7 @@
     chat.graphics.beginFill(0xCCCCCC);
     chat.graphics.drawRect(0, 0, 300, 30);
     chat.graphics.endFill();
-    chat.graphics.position.set(10, renderer.height - 40)
+    chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10))
 	  
     chat.placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
@@ -224,7 +224,7 @@
     leaderBoard.graphics.beginFill(0xCCCCCC);
     leaderBoard.graphics.drawRect(0, 0, 140, 215);
     leaderBoard.graphics.endFill();
-    leaderBoard.graphics.position.set(renderer.width - 150, 10);
+    leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
     leaderBoard.container.addChild(leaderBoard.graphics);
     leaderBoard.container.addChild(leaderBoard.title);
     leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2,leaderBoard.graphics.y + 15);
@@ -375,7 +375,7 @@
     circle.beginFill(node.color);
     circle.drawCircle(0, 0, node.size);
     circle.endFill();
-	  
+
     var name = new PIXI.Text("AJS", new PIXI.TextStyle({
       fontfamily: 'Ubuntu',
       fontSize: 20,

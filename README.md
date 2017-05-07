@@ -7,3 +7,7 @@ Todo
 - [ ] Chat
 - [ ] Spectating
 - [ ] Animations
+
+
+We are gonna make the best client ever
+

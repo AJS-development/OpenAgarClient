@@ -340,7 +340,7 @@
     }
   }
 
-  function updateLeaderBoard(nodes, title = "LeaderBoard") {
+  function updateLeaderBoard(nodes, title = "Leaderboard") {
     if (!(nodes instanceof Array)) return;
 	
 	// update leaderboard title, if different.
@@ -369,7 +369,7 @@
 	
 	// join rows
 	var d = rows.join("\r\n");
-	
+	rows = [];
 	// update content
 	leaderBoard.content.text = d;
 	

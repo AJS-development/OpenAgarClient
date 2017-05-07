@@ -1,8 +1,8 @@
 "use strict";
 /*
-    Copyright © Andrew S 2017
-    
-    ALL RIGHTS RESERVED
+  *  Copyright © Andrew S 2017, LegitSoulja
+  *
+  *  ALL RIGHTS RESERVED : 2017
 */
 
 (function(web, document, window, PIXI) {
@@ -42,6 +42,7 @@
       container: null,
       graphics: null,
       title: null,
+	  content: null,
       nodes: null
     },
     score = {
@@ -218,6 +219,15 @@
       fontWeight: "bold",
       fill: 0xFFFFFF,
     }));
+	
+	leaderBoard.content = new PIXI.Text("", new PIXI.TextStyle({
+      fontfamily: 'Ubuntu',
+      fontSize: 18,
+      align: "left",
+      breakWords: true,
+      fill: 0xFFAAAA,
+      fontWeight: "bold",
+    }));
     leaderBoard.graphics = new PIXI.Graphics();
     leaderBoard.graphics.alpha = .8;
     leaderBoard.graphics.beginFill(0xCCCCCC);
@@ -228,7 +238,9 @@
 	
     leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2,leaderBoard.graphics.y + 20);
     leaderBoard.title.anchor.x = leaderBoard.title.anchor.y = 0.5
+
     leaderBoard.container.addChild(leaderBoard.title);
+	leaderBoard.container.addChild(leaderBoard.content);
 
     // score
     
@@ -291,7 +303,27 @@
     })
     moveCamera()
     // Draw stuff
-    updateLeaderBoard([], "Leaderboard")
+    updateLeaderBoard([
+		{name: "Bot"},
+		{name: "Bot1"},
+		{name: "•?((¯°·._.• $ɨяµ$ •._.·°¯))؟•"},
+		{name: "Bot3"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		{name: "Bot4"},
+		
+	])
 
 
     renderer.render(camera);
@@ -308,16 +340,46 @@
     }
   }
 
-  function updateLeaderBoard(nodes, title = "Leaderboard") {
+  function updateLeaderBoard(nodes, title = "LeaderBoard") {
     if (!(nodes instanceof Array)) return;
-
-    // first lets draw the title.
+	
+	// update leaderboard title, if different.
     leaderBoard.title.text = title;
-
+	
+	// check if nodes exist
     if (nodes.length < 1) return;
+	
+	// rows to store each username, which will fit into table.
+	var rows = [];
+	
+	// max rows allowed for leaderboard.
+	var maxLeaderBoardRows = 10;
+	
+	// leaderboard offset.
+	maxLeaderBoardRows--;
+	
+	// positions.
+	var place = 1;
+	
     for (var i = 0; i < nodes.length; i++) {
-
+		if(i > maxLeaderBoardRows) continue;
+		rows.push(place.toString() + ": " + (nodes[i].name).slice(0,21));
+		place++;
     }
+	
+	// join rows
+	var d = rows.join("\r\n");
+	
+	// update content
+	leaderBoard.content.text = d;
+	
+	// re-draw graphics, and reposition content.
+	leaderBoard.graphics.clear();
+    leaderBoard.graphics.beginFill(0xCCCCCC);
+    leaderBoard.graphics.drawRect(0, 0, 200, leaderBoard.content.height + 50);
+    leaderBoard.graphics.endFill();
+	leaderBoard.content.position.set(leaderBoard.title.x - (leaderBoard.title.width / 2) - 10,(leaderBoard.title.y + leaderBoard.title.height) - 10);
+	
   }
 
   function moveCamera() {

@@ -1,8 +1,8 @@
 # OpenAgarClient
 
 Todo
-- [ ] Leaderboard
-- [ ] Names/mass
+- [x] Leaderboard
+- [x] Names/mass
 - [ ] Socket
 - [ ] Chat
 - [ ] Spectating

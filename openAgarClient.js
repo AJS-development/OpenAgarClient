@@ -6,8 +6,9 @@
  */
 
 (function (web, document, window, PIXI) {
+    var dev = 1;
+    
     // Variables
-
     var nodes = new HashBounds(),
         allNodes = [],
         virusNodes = [],
@@ -52,6 +53,15 @@
         },
         viewZoom = 0;
 
+    
+  if (!dev) {
+       window.console = {};
+      window.console.log = function() {
+            
+       }
+        
+   }
+    console.log("Dev Mode")
     // Classes
 
     class Node {
@@ -321,9 +331,6 @@
         window.requestAnimationFrame(gameLoop);
     }
 
-    //
-    window.addEventListener('resize', resize);
-    //
     function resize() {
         if (renderer !== null) {
             let win = getScreen();
@@ -410,7 +417,7 @@
 
     function viewRange() {
         var ratio;
-        ratio = Math.max(renderer.height / 7, renderer.width / 7);
+        ratio = Math.max(renderer.height / 65, renderer.width / 65);
         return ratio;
     }
 
@@ -444,6 +451,11 @@
         circle.width = node.size << 1; // - Radius * 2
         circle.height = node.size << 1;
     }
+
+
+    // Events
+    window.addEventListener('resize', resize);
+
 
 
     setUp()

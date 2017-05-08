@@ -148,6 +148,7 @@
     }
     allNodes.push(new Node(1, 1, 1, 100, 100))
         // Main Graphics Setup/loop
+  //  allNodes[0].setMove(1,1,800,800,.6,0)
     playerCells.push(allNodes[0])
 
     function getScreen() {
@@ -407,6 +408,9 @@
         // remember, center anchor/origon is 0.5 
 
         stage.pivot.set(tX, tY)
+        
+        stage.pivot.x = (stage.pivot.x + tX) >> 1;
+        stage.pivot.y = (stage.pivot.y + tY) >> 1;
             //stage.pivot.set(x, y)
             // console.log(viewZoom, stage.position, renderer.width)
     }
@@ -417,7 +421,7 @@
 
     function viewRange() {
         var ratio;
-        ratio = Math.max(renderer.height / 65, renderer.width / 65);
+        ratio = Math.max(renderer.height / 64, renderer.width / 64);
         return ratio;
     }
 
@@ -447,7 +451,8 @@
 
     function updateNode(node) {
         var circle = node.node;
-        circle.position.set(node.x, node.y);
+     //console.log(node.x,node.y)
+       circle.position.set(node.x, node.y);
         circle.width = node.size << 1; // - Radius * 2
         circle.height = node.size << 1;
     }

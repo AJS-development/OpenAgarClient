@@ -196,8 +196,6 @@
 
         // Create camera
         camera = new PIXI.Container();
-
-		camera.interactiveChildren = true;
 		
         // Create Chat
         chat.container = new PIXI.Container();
@@ -349,19 +347,22 @@
     }
 
 	  window.addEventListener("keyup", function(e){
-		  console.log(e);
-		  if(e.keyCode === 8) return;
-		  onKey(e,true);
+		  if(e.keyCode === 8) return; // ignore key up on backspace/.
+		  onKey(e, true);
 	  });
 	  window.addEventListener("keydown", function(e){
-		  if(e.keyCode === 8) onKey(e,true);
+		  if(e.keyCode === 8) onKey(e, false);
 	  })
+	function sendChat(msg){
+		alert(msg);
+	}
 	function onKey(e, up){
 		if(isTyping){
 			var maxMessageLength = 40;
 			var ignore = [8,16,27,20,17,18,13];
 			if(e.keyCode === 13){ // enter - send chat message
 				isTyping = false;
+				sendChat(chat.placeholder.text.toString());
 				chat.placeholder.text = "Press ENTER to Chat!"
 				return;
 			}
@@ -372,11 +373,11 @@
 			if(chat.placeholder.text.length > maxMessageLength) return;
 			if(ignore.indexOf(e.keyCode) > 0) return;
 			chat.placeholder.text += e.key;
-			console.log(chat.placeholder.text + e.key);
 		}else{
 			if(e.keyCode === 13) {
 				isTyping = true;
 				if(chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
+				return;
 			}
 		}
 	}

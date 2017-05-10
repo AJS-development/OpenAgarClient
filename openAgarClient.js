@@ -196,7 +196,6 @@
         // Create camera
         camera = new PIXI.Container();
 
-
         // Create Chat
         chat.container = new PIXI.Container();
         chat.graphics = new PIXI.Graphics();
@@ -204,7 +203,6 @@
         chat.graphics.beginFill(0xCCCCCC);
         chat.graphics.drawRect(0, 0, 300, 30);
         chat.graphics.endFill();
-        chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10))
 
         chat.placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
             fontfamily: 'Ubuntu',
@@ -214,7 +212,6 @@
             fill: 0x000000,
         }));
         chat.placeholder.alpha = .7;
-        chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
 
         chat.container.addChild(chat.graphics);
         chat.container.addChild(chat.placeholder);
@@ -244,10 +241,8 @@
         leaderBoard.graphics.beginFill(0xCCCCCC);
         leaderBoard.graphics.drawRect(0, 0, 200, 345);
         leaderBoard.graphics.endFill();
-        leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
         leaderBoard.container.addChild(leaderBoard.graphics);
-
-        leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2, leaderBoard.graphics.y + 20);
+	    
         leaderBoard.title.anchor.x = leaderBoard.title.anchor.y = 0.5
 
         leaderBoard.container.addChild(leaderBoard.title);
@@ -271,21 +266,19 @@
         score.graphics.beginFill(0xCCCCCC);
         score.graphics.drawRect(0, 0, score.text.width + 10, 35); // re-sizes via text with + 10
         score.graphics.endFill();
-        score.graphics.position.set(10, 10);
-        score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
 
         score.container.addChild(score.graphics);
         score.container.addChild(score.text);
         camera.addChild(score.container);
         camera.addChild(leaderBoard.container);
         camera.addChild(stage)
-            //Tell the `renderer` to `render` the `stage`
+	    
+        //Tell the `renderer` to `render` the `stage`
         renderer.render(camera)
 
         // CSS
         renderer.view.style.position = "absolute";
         renderer.view.style.display = "block";
-
 
         // Resize to fit screen
         resize();
@@ -307,7 +300,6 @@
             node.updatePos();
             if (node.node) updateNode(node);
             else drawNode(node);
-
         })
         stage.children.sort(function (a, b) { // sort by size for overlap rules
             return (a.order || a.size - b.size);
@@ -324,9 +316,7 @@
             {
                 name: "•?((¯°·._.• $ɨяµ$ •._.·°¯))؟•"
             }
-
-	])
-
+		])
 
         renderer.render(camera);
         window.requestAnimationFrame(gameLoop);
@@ -336,49 +326,50 @@
         if (renderer !== null) {
             let win = getScreen();
             renderer.resize(win.x, win.y);
+			chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10));
+			chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
+			leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
+			leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2, leaderBoard.graphics.y + 20);
+			score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
+			score.graphics.position.set(10, 10);
+			return;
         }
+		// retry to resize?
     }
 
     function updateLeaderBoard(nodes, title = "Leaderboard") {
-        if (!(nodes instanceof Array)) return;
-
         // update leaderboard title, if different.
-        leaderBoard.title.text = title;
+	if(leaderBoard.title.text != title) leaderBoard.title.text = title;
+		
+        if (!(nodes instanceof Array)) return;
 
         // check if nodes exist
         if (nodes.length < 1) return;
 
         // rows to store each username, which will fit into table.
-        var rows = [];
+        var rows = [], 
+	    maxRows = 10; // max rows allowed for leaderboard.
+	maxRows--;
 
-        // max rows allowed for leaderboard.
-        var maxLeaderBoardRows = 10;
-
-        // leaderboard offset.
-        maxLeaderBoardRows--;
-
-        // positions.
-        var place = 1;
+        // position.
+        var pos = 1;
 
         for (var i = 0; i < nodes.length; i++) {
-            if (i > maxLeaderBoardRows) continue;
-            rows.push(place.toString() + ": " + (nodes[i].name).slice(0, 21));
-            place++;
+            if (i > maxRows) break; // 
+            rows.push(pos.toString() + ": " + (nodes[i].name).slice(0, 21));
+            pos++;
         }
 
-        // join rows
-        var d = rows.join("\r\n");
-        rows = [];
         // update content
-        leaderBoard.content.text = d;
-
+        leaderBoard.content.text = rows.join("\r\n");
+	rows = null; // clear mem
+		
         // re-draw graphics, and reposition content.
         leaderBoard.graphics.clear();
         leaderBoard.graphics.beginFill(0xCCCCCC);
         leaderBoard.graphics.drawRect(0, 0, 200, leaderBoard.content.height + 50);
         leaderBoard.graphics.endFill();
         leaderBoard.content.position.set(leaderBoard.title.x - (leaderBoard.title.width / 2) - 10, (leaderBoard.title.y + leaderBoard.title.height) - 10);
-
     }
 
     function moveCamera() {
@@ -411,28 +402,26 @@
         
         stage.pivot.x = (stage.pivot.x + tX) >> 1;
         stage.pivot.y = (stage.pivot.y + tY) >> 1;
-            //stage.pivot.set(x, y)
-            // console.log(viewZoom, stage.position, renderer.width)
+        //stage.pivot.set(x, y)
+        // console.log(viewZoom, stage.position, renderer.width)
     }
 
 
 
     // Functions
-
     function viewRange() {
         var ratio;
         ratio = Math.max(renderer.height / 64, renderer.width / 64);
         return ratio;
     }
 
-
-
     function drawNode(node) {
         var circle = new PIXI.Graphics();
         circle.beginFill(node.color);
         circle.drawCircle(0, 0, node.size);
         circle.endFill();
-
+		
+        // is it possible to attatch this to the node itself? This is a memory leak, creating a new Text object every frame.
         var name = new PIXI.Text(node.name, new PIXI.TextStyle({
             fontfamily: 'Ubuntu',
             fontSize: 20,
@@ -457,11 +446,8 @@
         circle.height = node.size << 1;
     }
 
-
     // Events
     window.addEventListener('resize', resize);
-
-
 
     setUp()
 })($, document, window, PIXI)

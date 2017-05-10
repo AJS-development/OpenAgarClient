@@ -16,6 +16,7 @@
         playerCells = [],
         players = [],
         skinCache = [],
+		isTyping = false,
         customSkins = [],
         config = {},
         renderOptions = {
@@ -196,6 +197,8 @@
         // Create camera
         camera = new PIXI.Container();
 
+		camera.interactiveChildren = true;
+		
         // Create Chat
         chat.container = new PIXI.Container();
         chat.graphics = new PIXI.Graphics();
@@ -213,6 +216,12 @@
         }));
         chat.placeholder.alpha = .7;
 
+		chat.placeholder.interactive = true;
+		chat.placeholder.on('click', (e) =>{
+			if(chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
+			isTyping = true;
+		})
+		
         chat.container.addChild(chat.graphics);
         chat.container.addChild(chat.placeholder);
         camera.addChild(chat.container);
@@ -236,6 +245,8 @@
             fill: 0xFFAAAA,
             fontWeight: "bold",
         }));
+		
+
         leaderBoard.graphics = new PIXI.Graphics();
         leaderBoard.graphics.alpha = .8;
         leaderBoard.graphics.beginFill(0xCCCCCC);
@@ -337,6 +348,39 @@
         // retry to resize?
     }
 
+	  window.addEventListener("keyup", function(e){
+		  console.log(e);
+		  if(e.keyCode === 8) return;
+		  onKey(e,true);
+	  });
+	  window.addEventListener("keydown", function(e){
+		  if(e.keyCode === 8) onKey(e,true);
+	  })
+	function onKey(e, up){
+		if(isTyping){
+			var maxMessageLength = 40;
+			var ignore = [8,16,27,20,17,18,13];
+			if(e.keyCode === 13){ // enter - send chat message
+				isTyping = false;
+				chat.placeholder.text = "Press ENTER to Chat!"
+				return;
+			}
+			if(e.keyCode === 8){
+				chat.placeholder.text = chat.placeholder.text.slice(0, chat.placeholder.text.length - 1);
+				return;
+			}
+			if(chat.placeholder.text.length > maxMessageLength) return;
+			if(ignore.indexOf(e.keyCode) > 0) return;
+			chat.placeholder.text += e.key;
+			console.log(chat.placeholder.text + e.key);
+		}else{
+			if(e.keyCode === 13) {
+				isTyping = true;
+				if(chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
+			}
+		}
+	}
+	
     function updateLeaderBoard(nodes, title = "Leaderboard") {
         // update leaderboard title, if different.
 	if(leaderBoard.title.text != title) leaderBoard.title.text = title;

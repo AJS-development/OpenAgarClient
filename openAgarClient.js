@@ -326,15 +326,15 @@
         if (renderer !== null) {
             let win = getScreen();
             renderer.resize(win.x, win.y);
-			chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10));
-			chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
-			leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
-			leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2, leaderBoard.graphics.y + 20);
-			score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
-			score.graphics.position.set(10, 10);
-			return;
+            chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10));
+	    chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
+	    leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
+	    leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2, leaderBoard.graphics.y + 20);
+	    score.graphics.position.set(10, 10);
+	    score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
+	    return;
         }
-		// retry to resize?
+        // retry to resize?
     }
 
     function updateLeaderBoard(nodes, title = "Leaderboard") {

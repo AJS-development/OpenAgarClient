@@ -7,7 +7,8 @@
 
 (function (web, document, window, PIXI) {
     var dev = 1;
-    
+
+
     // Variables
     var nodes = new HashBounds(),
         allNodes = [],
@@ -16,7 +17,7 @@
         playerCells = [],
         players = [],
         skinCache = [],
-		isTyping = false,
+        isTyping = false,
         customSkins = [],
         config = {},
         renderOptions = {
@@ -24,7 +25,11 @@
             resolution: 1,
             clearBeforeRender: true,
             roundPixels: true
-        };
+        },
+        keys = [];
+
+    // Connectivity variables
+    var socket;
 
     // System Variables
 
@@ -54,16 +59,33 @@
         },
         viewZoom = 0;
 
-    
-  if (!dev) {
-       window.console = {};
-      window.console.log = function() {
-            
-       }
-        
-   }
+
+    if (!dev) {
+        window.console = {};
+        window.console.log = function () {
+
+        }
+
+    }
     console.log("Dev Mode")
-    // Classes
+        // Classes
+
+    class Player {
+        constructor(id) {
+            this.id = id;
+            this.cells = new QuickMap();
+
+        }
+        addNode(node) {
+            this.cells.set(node.id, node)
+
+        }
+        removeNode(node) {
+            this.cells.delete(node.id)
+        }
+    }
+
+
 
     class Node {
         constructor(id, x, y, size, mass, color) {
@@ -149,7 +171,7 @@
     }
     allNodes.push(new Node(1, 1, 1, 100, 100))
         // Main Graphics Setup/loop
-  //  allNodes[0].setMove(1,1,800,800,.6,0)
+        //  allNodes[0].setMove(1,1,800,800,.6,0)
     playerCells.push(allNodes[0])
 
     function getScreen() {
@@ -180,6 +202,8 @@
         //Create the renderer
         //renderer = PIXI.autoDetectRenderer(256, 256);
 
+
+
         let win = getScreen();
         if (PIXI.utils.isWebGLSupported()) renderer = new PIXI.WebGLRenderer(win.x, win.y, renderOptions);
         else renderer = new PIXI.CanvasRenderer(win.x, win.y, renderOptions);
@@ -196,7 +220,7 @@
 
         // Create camera
         camera = new PIXI.Container();
-		
+
         // Create Chat
         chat.container = new PIXI.Container();
         chat.graphics = new PIXI.Graphics();
@@ -204,7 +228,6 @@
         chat.graphics.beginFill(0xCCCCCC);
         chat.graphics.drawRect(0, 0, 300, 30);
         chat.graphics.endFill();
-
         chat.placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
             fontfamily: 'Ubuntu',
             fontSize: 15,
@@ -214,12 +237,12 @@
         }));
         chat.placeholder.alpha = .7;
 
-		chat.placeholder.interactive = true;
-		chat.placeholder.on('click', (e) =>{
-			if(chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
-			isTyping = true;
-		})
-		
+        chat.placeholder.interactive = true;
+        chat.placeholder.on('click', (e) => {
+            if (chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
+            isTyping = true;
+        })
+
         chat.container.addChild(chat.graphics);
         chat.container.addChild(chat.placeholder);
         camera.addChild(chat.container);
@@ -243,7 +266,7 @@
             fill: 0xFFAAAA,
             fontWeight: "bold",
         }));
-		
+
 
         leaderBoard.graphics = new PIXI.Graphics();
         leaderBoard.graphics.alpha = .8;
@@ -251,7 +274,7 @@
         leaderBoard.graphics.drawRect(0, 0, 200, 345);
         leaderBoard.graphics.endFill();
         leaderBoard.container.addChild(leaderBoard.graphics);
-	    
+
         leaderBoard.title.anchor.x = leaderBoard.title.anchor.y = 0.5
 
         leaderBoard.container.addChild(leaderBoard.title);
@@ -281,7 +304,7 @@
         camera.addChild(score.container);
         camera.addChild(leaderBoard.container);
         camera.addChild(stage)
-	    
+
         //Tell the `renderer` to `render` the `stage`
         renderer.render(camera)
 
@@ -292,6 +315,21 @@
         // Resize to fit screen
         resize();
         gameLoop();
+    }
+
+    function resize() {
+        if (renderer !== null) {
+            let win = getScreen();
+            renderer.resize(win.x, win.y);
+            chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10));
+            chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
+            leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
+            leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2, leaderBoard.graphics.y + 20);
+            score.graphics.position.set(10, 10);
+            score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
+            return;
+        }
+        // retry to resize?
     }
 
     function gameLoop() {
@@ -331,70 +369,50 @@
         window.requestAnimationFrame(gameLoop);
     }
 
-    function resize() {
-        if (renderer !== null) {
-            let win = getScreen();
-            renderer.resize(win.x, win.y);
-            chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10));
-	    chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
-	    leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
-	    leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2, leaderBoard.graphics.y + 20);
-	    score.graphics.position.set(10, 10);
-	    score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
-	    return;
-        }
-        // retry to resize?
+
+    function sendChat(msg) {
+        alert(msg);
     }
 
-	  window.addEventListener("keyup", function(e){
-		  if(e.keyCode === 8) return; // ignore key up on backspace/.
-		  onKey(e, true);
-	  });
-	  window.addEventListener("keydown", function(e){
-		  if(e.keyCode === 8) onKey(e, false);
-	  })
-	function sendChat(msg){
-		alert(msg);
-	}
-	function onKey(e, up){
-		if(isTyping){
-			var maxMessageLength = 40;
-			var ignore = [8,16,27,20,17,18,13];
-			if(e.keyCode === 13){ // enter - send chat message
-				isTyping = false;
-				sendChat(chat.placeholder.text.toString());
-				chat.placeholder.text = "Press ENTER to Chat!"
-				return;
-			}
-			if(e.keyCode === 8){
-				chat.placeholder.text = chat.placeholder.text.slice(0, chat.placeholder.text.length - 1);
-				return;
-			}
-			if(chat.placeholder.text.length > maxMessageLength) return;
-			if(ignore.indexOf(e.keyCode) > 0) return;
-			chat.placeholder.text += e.key;
-		}else{
-			if(e.keyCode === 13) {
-				isTyping = true;
-				if(chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
-				return;
-			}
-		}
-	}
-	
+    function onKey(e, up) {
+        if (isTyping) {
+            var maxMessageLength = 40;
+            var ignore = [8, 16, 27, 20, 17, 18, 13];
+            if (e.keyCode === 13) { // enter - send chat message
+                isTyping = false;
+                sendChat(chat.placeholder.text.toString());
+                chat.placeholder.text = "Press ENTER to Chat!"
+                return;
+            }
+            if (e.keyCode === 8) {
+                chat.placeholder.text = chat.placeholder.text.slice(0, chat.placeholder.text.length - 1);
+                return;
+            }
+            if (chat.placeholder.text.length > maxMessageLength) return;
+            if (ignore.indexOf(e.keyCode) > 0) return;
+            chat.placeholder.text += e.key;
+        } else {
+            if (e.keyCode === 13) {
+                isTyping = true;
+                if (chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
+                return;
+            }
+        }
+    }
+
     function updateLeaderBoard(nodes, title = "Leaderboard") {
         // update leaderboard title, if different.
-	if(leaderBoard.title.text != title) leaderBoard.title.text = title;
-		
+        if (leaderBoard.title.text != title) leaderBoard.title.text = title;
+
         if (!(nodes instanceof Array)) return;
 
         // check if nodes exist
         if (nodes.length < 1) return;
 
         // rows to store each username, which will fit into table.
-        var rows = [], 
-	    maxRows = 10; // max rows allowed for leaderboard.
-	maxRows--;
+        var rows = [],
+            maxRows = 10; // max rows allowed for leaderboard.
+        maxRows--;
 
         // position.
         var pos = 1;
@@ -407,8 +425,8 @@
 
         // update content
         leaderBoard.content.text = rows.join("\r\n");
-	rows = null; // clear mem
-		
+        rows = null; // clear mem
+
         // re-draw graphics, and reposition content.
         leaderBoard.graphics.clear();
         leaderBoard.graphics.beginFill(0xCCCCCC);
@@ -444,7 +462,7 @@
         // remember, center anchor/origon is 0.5 
 
         stage.pivot.set(tX, tY)
-        
+
         stage.pivot.x = (stage.pivot.x + tX) >> 1;
         stage.pivot.y = (stage.pivot.y + tY) >> 1;
         //stage.pivot.set(x, y)
@@ -465,7 +483,7 @@
         circle.beginFill(node.color);
         circle.drawCircle(0, 0, node.size);
         circle.endFill();
-		
+
         // is it possible to attatch this to the node itself? This is a memory leak, creating a new Text object every frame.
         var name = new PIXI.Text(node.name, new PIXI.TextStyle({
             fontfamily: 'Ubuntu',
@@ -485,14 +503,64 @@
 
     function updateNode(node) {
         var circle = node.node;
-     //console.log(node.x,node.y)
-       circle.position.set(node.x, node.y);
+        //console.log(node.x,node.y)
+        circle.position.set(node.x, node.y);
         circle.width = node.size << 1; // - Radius * 2
         circle.height = node.size << 1;
     }
 
+    function sendKey(key) {
+
+    }
+
+    function onKeyUp(key) {
+        if (!keys[key]) return;
+
+        keys[key] = false;
+    }
+
+
+    function onKeyDown(key) {
+        if (keys[key]) return;
+
+        keys[key] = true;
+
+        switch (key) {
+        case 32: // space
+            break;
+        case 87: // w
+            break;
+        case 81: // q
+            break;
+        case 70: // f
+            break;
+        case 69: // e
+            break;
+        case 82: // r
+            break;
+        case 84: // t
+            break;
+        case 27: // esc
+            break;
+        }
+
+
+    }
+
     // Events
     window.addEventListener('resize', resize);
-
+    window.addEventListener("keyup", function (e) {
+        onKeyUp(e.keyCode);
+    });
+    window.addEventListener("keydown", function (e) {
+        onKeyDown(e.keyCode);
+    })
     setUp()
+
+
+    // Outside Functions
+
+
+
+
 })($, document, window, PIXI)

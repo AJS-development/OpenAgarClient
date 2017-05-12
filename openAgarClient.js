@@ -16,9 +16,9 @@
         nodeCache = [],
         playerCells = [],
         players = [],
+        customSkins = [],
         skinCache = [],
         isTyping = false,
-        customSkins = [],
         config = {},
         renderOptions = {
             autoResize: true,
@@ -173,6 +173,11 @@
         // Main Graphics Setup/loop
         //  allNodes[0].setMove(1,1,800,800,.6,0)
     playerCells.push(allNodes[0])
+
+
+
+    // Functions
+
 
     function getScreen() {
         return {
@@ -470,8 +475,6 @@
     }
 
 
-
-    // Functions
     function viewRange() {
         var ratio;
         ratio = Math.max(renderer.height / 64, renderer.width / 64);
@@ -546,6 +549,82 @@
 
 
     }
+
+    function connect(url) {
+        nodes = new HashBounds();
+        allNodes = []
+        virusNodes = []
+        nodeCache = []
+        playerCells = []
+        players = []
+        customSkins = []
+
+        socket = io(url);
+        socket.on('error', function () {
+
+        })
+        socket.on('reconnect_error', function () {
+
+
+        })
+        socket.on('reconnect_failed', function () {
+
+
+        })
+        socket.on('disconnect', function () {
+
+        })
+        socket.on('connect', function () {
+
+        });
+        socket.on('hello', function () {
+
+        })
+        socket.on('infop', function () {
+
+        })
+        socket.on('accepted', function () {
+
+        })
+        socket.on('kicked', function () {
+
+        })
+        socket.on('ddos', function () {
+
+        })
+        socket.on('ddosover', function () {
+
+        })
+        socket.on('mes', function () {
+
+        })
+        socket.on('updatepos', function () {
+
+        })
+        socket.on('cpacket', function () {
+
+        })
+        socket.on('rip', function () {
+
+        })
+        socket.on('killer', function () {
+
+        })
+        socket.on('nodes', function () {
+
+        })
+        socket.on('delnodes', function () {
+
+        })
+        socket.on('lb', function () {
+
+        })
+        socket.on('chat', function () {
+
+        })
+    }
+
+
 
     // Events
     window.addEventListener('resize', resize);

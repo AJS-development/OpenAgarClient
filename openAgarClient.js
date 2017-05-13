@@ -43,7 +43,7 @@
         chat = {
             container: null,
             graphics: null,
-            placeholder: null,
+            input: null,
         },
         leaderBoard = {
             container: null,
@@ -233,23 +233,9 @@
         chat.graphics.beginFill(0xCCCCCC);
         chat.graphics.drawRect(0, 0, 300, 30);
         chat.graphics.endFill();
-        chat.placeholder = new PIXI.Text("Press ENTER to Chat!", new PIXI.TextStyle({
-            fontfamily: 'Ubuntu',
-            fontSize: 15,
-            align: "center",
-            breakWords: true,
-            fill: 0x000000,
-        }));
-        chat.placeholder.alpha = .7;
-
-        chat.placeholder.interactive = true;
-        chat.placeholder.on('click', (e) => {
-            if (chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
-            isTyping = true;
-        })
 
         chat.container.addChild(chat.graphics);
-        chat.container.addChild(chat.placeholder);
+        // chat.container.addChild(chat.input);
         camera.addChild(chat.container);
 
         // Create Leaderboard
@@ -327,7 +313,6 @@
             let win = getScreen();
             renderer.resize(win.x, win.y);
             chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10));
-            chat.placeholder.position.set(chat.graphics.x + 10, chat.graphics.y + 6);
             leaderBoard.graphics.position.set(renderer.width - (leaderBoard.graphics.width + 10), 10);
             leaderBoard.title.position.set(leaderBoard.graphics.x + leaderBoard.graphics.width / 2, leaderBoard.graphics.y + 20);
             score.graphics.position.set(10, 10);
@@ -379,31 +364,6 @@
         alert(msg);
     }
 
-    function onKey(e, up) {
-        if (isTyping) {
-            var maxMessageLength = 40;
-            var ignore = [8, 16, 27, 20, 17, 18, 13];
-            if (e.keyCode === 13) { // enter - send chat message
-                isTyping = false;
-                sendChat(chat.placeholder.text.toString());
-                chat.placeholder.text = "Press ENTER to Chat!"
-                return;
-            }
-            if (e.keyCode === 8) {
-                chat.placeholder.text = chat.placeholder.text.slice(0, chat.placeholder.text.length - 1);
-                return;
-            }
-            if (chat.placeholder.text.length > maxMessageLength) return;
-            if (ignore.indexOf(e.keyCode) > 0) return;
-            chat.placeholder.text += e.key;
-        } else {
-            if (e.keyCode === 13) {
-                isTyping = true;
-                if (chat.placeholder.text == "Press ENTER to Chat!") chat.placeholder.text = ""
-                return;
-            }
-        }
-    }
 
     function updateLeaderBoard(nodes, title = "Leaderboard") {
         // update leaderboard title, if different.

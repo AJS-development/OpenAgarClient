@@ -19,6 +19,7 @@
         customSkins = [],
         skinCache = [],
         isTyping = false,
+		started = false,
         config = {},
         renderOptions = {
             autoResize: true,
@@ -31,6 +32,9 @@
     // Connectivity variables
     var socket;
 
+	// Skins array
+	var skins = [];
+	
     // System Variables
 
     var time = Date.now(),
@@ -186,7 +190,9 @@
         }
     }
 
-    function setUp() {
+    function setUp(_skins) {
+		if(started) return;
+		started = true;
         /*
                          +-----------+
                          |  Camera   |
@@ -207,11 +213,13 @@
         //Create the renderer
         //renderer = PIXI.autoDetectRenderer(256, 256);
 
-
+		if(_skins instanceof Array){
+			skins = _skins;
+			if(dev) console.log(`Loaded ${_skins.length} skins`);
+		}
 
         let win = getScreen();
-        if (PIXI.utils.isWebGLSupported()) renderer = new PIXI.WebGLRenderer(win.x, win.y, renderOptions);
-        else renderer = new PIXI.CanvasRenderer(win.x, win.y, renderOptions);
+		renderer = new PIXI.autoDetectRenderer(win.x,win.y,renderOptions);
 
         if (!renderer) return alert("Could not establish renderer");
 
@@ -309,7 +317,7 @@
     }
 
     function resize() {
-        if (renderer !== null) {
+        if (renderer instanceof Object) {
             let win = getScreen();
             renderer.resize(win.x, win.y);
             chat.graphics.position.set(10, renderer.height - (chat.graphics.height + 10));
@@ -319,7 +327,6 @@
             score.text.position.set(score.graphics.x + 5, score.graphics.y + 3);
             return;
         }
-        // retry to resize?
     }
 
     function gameLoop() {
@@ -377,13 +384,12 @@
         // rows to store each username, which will fit into table.
         var rows = [],
             maxRows = 10; // max rows allowed for leaderboard.
-        maxRows--;
 
         // position.
         var pos = 1;
 
         for (var i = 0; i < nodes.length; i++) {
-            if (i > maxRows) break; // 
+            if (i > (maxRows - 1)) break; // 
             rows.push(pos.toString() + ": " + (nodes[i].name).slice(0, 21));
             pos++;
         }
@@ -481,7 +487,43 @@
 
         keys[key] = false;
     }
-
+	
+	function removeCustomSkins(){
+		for(var i in skins)
+			if(skins[i].id < 0) skins.splice(i,1);
+		window.dispatchEvent(new CustomEvent('remove_custom_skins'));
+	}
+	
+	function gen(min,max){
+		return (Math.random() * (max - min) + min);
+	}
+	
+	function updateCustomSkins(skins){
+		removeCustomSkins();
+		let c = []; // stores used id's
+		
+		// so, if a server has custom skins, parse into an array as so
+		var a = [{
+			name: "undefined", // needs name,
+			url: "undefined", // needs url
+		    id: null, // id's are randomly generated.
+		}];
+		
+		function g(){
+			let _ = ~~(gen(-1E3,-1));
+			if(c.indexOf(_) > 0) return gen();
+			c.push(_);
+			return _;
+		}
+		
+		for(var i in a){
+			a[i].id = g(); // generate id, 
+			skins.push(a[i]); // push custom skin to game skins
+		}
+		
+		// send custom skins to UI, so they can be searched.
+		window.dispatchEvent(new CustomEvent('add_custom_skins', {detail:{skins:a}}));
+	}
 
     function onKeyDown(key) {
         if (keys[key]) return;
@@ -584,8 +626,6 @@
         })
     }
 
-
-
     // Events
     window.addEventListener('resize', resize);
     window.addEventListener("keyup", function (e) {
@@ -594,12 +634,33 @@
     window.addEventListener("keydown", function (e) {
         onKeyDown(e.keyCode);
     })
-    setUp()
-
-
-    // Outside Functions
-
-
-
-
+	
+	if(typeof(ajs) != "undefined"){
+		window.addEventListener('skins_loaded', function (e) {
+			return setUp(e.detail.skins); // skins are passed when all skins are loaded.
+			// close/open ui using
+			// ajs.hide_ui(), ajs.show_ui()
+		});
+		
+		window.addEventListener('skins_failed', function(){
+			// callback from ui, if skins failed to load.
+		});
+		
+		window.addEventListener('onPlay', function (e) {
+			e = e.detail;
+			// e.name = (string)
+			// e.skin = (object)
+			// skin id = e.skin.id;
+			// skin url = e.skin.url
+			// skin name = e.skin.name
+			// etc
+			console.log(e.skin);
+			// hide ui
+			ajs.hide_ui();
+		});
+	}else{
+		if(dev) return setUp();
+		return alert("Failed to start engines");
+	}
+	
 })($, document, window, PIXI)

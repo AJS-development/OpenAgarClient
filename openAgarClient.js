@@ -641,7 +641,22 @@
 			// close/open ui using
 			// ajs.hide_ui(), ajs.show_ui()
 		});
-		
+		window.addEventListener('option_change', function(e){
+			e = e.detail;
+			// e.state : true = checked, false = unchecked
+			switch(e.option.toLowerCase()){
+				case "no_skins":
+				case "no_names":
+				case "dark_theme":
+				case "no_colors":
+				case "show_mass":
+				case "hide_chat":
+				case "smooth_render":
+				case "acid_mode":
+				case "hide_grid":
+				default: return alert("Unknown option " + e.option)
+			}
+		});
 		window.addEventListener('skins_failed', function(){
 			// callback from ui, if skins failed to load.
 		});

@@ -4,6 +4,17 @@
  *
  *  ALL RIGHTS RESERVED : 2017
  */
+(function (window) {
+    var events = {}
+
+    window.addEvent = function (name, func) {
+        events[name] = func;
+    }
+    window.callEvent = function (name, a, b, c, d, e, f) {
+        return events[name](a, b, c, d, e, f);
+    }
+})(window);
+
 
 (function (web, document, window, PIXI) {
     var dev = 1;
@@ -494,7 +505,7 @@
     function removeCustomSkins() {
         for (var i in skins)
             if (skins[i].id < 0) skins.splice(i, 1);
-        window.dispatchEvent(new CustomEvent('remove_custom_skins'));
+        window.callEvent('remove_custom_skins');
     }
 
     function gen(min, max) {
@@ -525,11 +536,7 @@
         }
 
         // send custom skins to UI, so they can be searched.
-        window.dispatchEvent(new CustomEvent('add_custom_skins', {
-            detail: {
-                skins: a
-            }
-        }));
+        window.callEvent('add_custom_skins', a)
     }
 
     function onKeyDown(key) {
@@ -652,12 +659,12 @@
     })
 
     if (typeof (ajs) != "undefined") {
-        window.addEventListener('skins_loaded', function (e) {
+        window.addEvent('skins_loaded', function (e) {
             return setUp(e.detail.skins); // skins are passed when all skins are loaded.
             // close/open ui using
             // ajs.hide_ui(), ajs.show_ui()
         });
-        window.addEventListener('option_change', function (e) {
+        window.addEvent('option_change', function (e) {
             e = e.detail;
             // e.state : true = checked, false = unchecked
             switch (e.option.toLowerCase()) {
@@ -674,11 +681,11 @@
                 return alert("Unknown option " + e.option)
             }
         });
-        window.addEventListener('skins_failed', function () {
+        window.addEvent('skins_failed', function () {
             // callback from ui, if skins failed to load.
         });
 
-        window.addEventListener('onPlay', function (e) {
+        window.addEvent('onPlay', function (e) {
             e = e.detail;
             // e.name = (string)
             // e.skin = (object)

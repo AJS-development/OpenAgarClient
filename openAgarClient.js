@@ -73,7 +73,7 @@
     class Player {
         constructor(id) {
             this.id = id;
-            this.cells = new QuickMap();
+            this.cells = new QuickMapV2();
 
         }
         addNode(node) {
@@ -338,9 +338,12 @@
     }
 
     function gameLoop() {
-
         time = Date.now();
-        frameID = (frameID < 0xFFFFFFFF) ? frameID++ : frameID = 0;
+
+
+        frameID = (frameID < 0xFFFFFFFF) ? (frameID += 1) : frameID = 0;
+
+        if ((frameID % 6) == 0) sendMouse(renderer.plugins.interaction.mouse.global)
 
         allNodes.forEach((node) => {
             node.updatePos();
@@ -624,6 +627,13 @@
         })
     }
 
+    function sendMouse(pos) {
+
+        pos = stage.toLocal(pos)
+        var x = pos.x,
+            y = pos.y;
+
+    }
 
 
     // Events

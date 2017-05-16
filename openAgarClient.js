@@ -659,15 +659,15 @@
     })
 
     if (typeof (ajs) != "undefined") {
-        window.addEvent('skins_loaded', function (e) {
-            return setUp(e.detail.skins); // skins are passed when all skins are loaded.
+        window.addEvent('skins_loaded', function (skins) {
+            return setUp(skins); // skins are passed when all skins are loaded.
             // close/open ui using
             // ajs.hide_ui(), ajs.show_ui()
         });
-        window.addEvent('option_change', function (e) {
-            e = e.detail;
-            // e.state : true = checked, false = unchecked
-            switch (e.option.toLowerCase()) {
+        window.addEvent('option_change', function (option, state) {
+
+            // state : true = checked, false = unchecked
+            switch (option.toLowerCase()) {
             case "no_skins":
             case "no_names":
             case "dark_theme":
@@ -678,22 +678,22 @@
             case "acid_mode":
             case "hide_grid":
             default:
-                return alert("Unknown option " + e.option)
+                return alert("Unknown option " + option)
             }
         });
         window.addEvent('skins_failed', function () {
             // callback from ui, if skins failed to load.
         });
 
-        window.addEvent('onPlay', function (e) {
-            e = e.detail;
+        window.addEvent('onPlay', function (skin, name) {
+
             // e.name = (string)
             // e.skin = (object)
             // skin id = e.skin.id;
             // skin url = e.skin.url
             // skin name = e.skin.name
             // etc
-            console.log(e.skin);
+            console.log(skin);
             // hide ui
             ajs.hide_ui();
         });

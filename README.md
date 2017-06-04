@@ -3,10 +3,11 @@
 Todo
 - [x] Leaderboard
 - [x] Names/mass
-- [ ] Socket
+- [x] Socket
 - [ ] Chat
 - [ ] Spectating
-- [ ] Animations
+- [x] Animations
+- [ ] UI (Partialy). Need thoughts, ideas.
 
 
 We are gonna make the best client ever

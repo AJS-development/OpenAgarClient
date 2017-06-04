@@ -1,5 +1,5 @@
 {
-	"task": "2 of 5",
-	"progress": 30,
-	"status": "Can't get enough of mesh"
+	"task": "4 of 7",
+	"progress": 60,
+	"status": "Making things more smoother"
 }

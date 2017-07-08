@@ -1,13 +1,15 @@
 # OpenAgarClient
 
+> 90% done
+
 Todo
 - [x] Leaderboard
 - [x] Names/mass
 - [x] Socket
-- [ ] Chat
+- [x] Chat
 - [ ] Spectating
 - [x] Animations
-- [ ] UI (Partialy). Need thoughts, ideas.
+- [x] UI (Partialy). Need thoughts, ideas.
 
 
 We are gonna make the best client ever
